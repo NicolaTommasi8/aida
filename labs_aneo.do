@@ -1006,7 +1006,7 @@ if !_rc {
   local pre = r(N)
   strrec formgiur ("Associazione" = 1 "Associazione")  ///
                   ("Associazione impresa"= 2 "Associazione impresa")   ///
-                  ("Consorzio" "Consorzio senza attivita' esterna" = 3 "Consorzio")   ///
+                  ("Consorzio" "Consorzio senza attivita' esterna" "Consorzio ai sensi del D.lgs. 267/2000" = 3 "Consorzio")   ///
                   ("Consorzio con attivita' esterna" = 4 "Consorzio con attività esterna")   ///
                   ("Fondazione" = 5 "Fondazione")   ///
                   ("Fondazione impresa" = 6 "Fondazione impresa")   ///
@@ -1022,7 +1022,7 @@ if !_rc {
                   ("S.R.L." = 16 "S.R.L.")  ///
                   ("S.R.L. a unico socio" "S.R.L. a socio unico" = 17 "S.R.L. a unico socio")  ///
                   ("S.S." "Società semplice" = 18 "S.S.")  ///
-                  ("Soc. Estera" "Società estera" = 19 "Società estera")  ///
+                  ("Soc. Estera" "Società estera" "Società estere" "Società europea" = 19 "Società estera")  ///
                   ("Soc. consortile" "Società consortile in nome collettivo" = 20 "Società consortile")  ///
                   ("Soc. consortile a resp. limitata" "Società consortile a responsabilita' limitata" = 21 "Società consortile a responsabilità limitata")  ///
                   ("Soc. consortile per azioni" "Società consortile per azioni" = 22 "Società consortile per azioni")  ///
@@ -1035,9 +1035,11 @@ if !_rc {
                   ("Mutua assicurazione" = 29 "Mutua assicurazione")  ///
                   ("Ente" = 30 "Ente")  ///
                   ("S.R.L. semplificata" = 31 "S.R.L. semplificata") ///
-                  ("S.R.L. a capitale ridotto" = 32 "S.R.L. a capitale ridotto"), gen(h14)
-
-count if h14==.
+                  ("S.R.L. a capitale ridotto" = 32 "S.R.L. a capitale ridotto")  ///
+                  ("Società consortile cooperativa a responsabilità limitata" = 33 "Società consortile cooperativa a responsabilità limitata")  ///
+                  ("Società di mutuo soccorso" = 34 "Società di mutuo soccorso")  ///
+                  ("Azienda speciale" "Azienda speciale ai sensi del D.lgs. 267/2000"= 35 "Azienda speciale"), gen(h14)
+                  count if h14==.
 assert r(N) == `pre'
 **fre formgiur if h14==.
 order h14, after(formgiur)
@@ -1121,7 +1123,7 @@ if !_rc {
                       ("C1" = 11 "Consolidato per società SENZA non consolidato" ) ///
                       ("U2" = 20 "Non consolidato per società CON consolidato")  ///
                       ("U1" = 21 "Non consolidato per società SENZA consolidato")  ///
-                      ("NF" = 99 "NF ???"), gen(h21)
+                      ("NF" = 99 "NF"), gen(h21)
   order h21, after(codicons_str)
   assert h21!=. if codicons_str!=""
   label var h21 "Codice di consolidamento"
@@ -2805,195 +2807,191 @@ if !_rc {
 
 capture confirm variable vc_1201
 if !_rc {
- label var vc_1201 "Cred. vs imprese sottoposte al controllo delle controllanti entro"
- }
+  label var vc_1201 "Cred. vs imprese sottoposte al controllo delle controllanti entro"
+}
 
 capture confirm variable vc_1202
 if !_rc {
- label var vc_1202 "Cred. vs imprese sottoposte al controllo delle controllanti oltre"
- }
+  label var vc_1202 "Cred. vs imprese sottoposte al controllo delle controllanti oltre"
+}
 
 capture confirm variable vc_1210
 if !_rc {
- label var vc_1210 "Riserva per operazioni copertura flussi finanziari attesi"
- }
+  label var vc_1210 "Riserva per operazioni copertura flussi finanziari attesi"
+}
 
 capture confirm variable vc_1211
 if !_rc {
- label var vc_1211 "Riserva negativa per azioni proprie in portafoglio"
- }
+  label var vc_1211 "Riserva negativa per azioni proprie in portafoglio"
+}
 
 capture confirm variable vc_3205
 if !_rc {
- label var vc_3205 "Cred. vs imprese sottoposte al controllo delle controllanti entro"
- }
+  label var vc_3205 "Cred. vs imprese sottoposte al controllo delle controllanti entro"
+}
 
 capture confirm variable vc_3206
 if !_rc {
- label var vc_3206 "Cred. vs imprese sottoposte al controllo delle controllanti oltre"
- }
+  label var vc_3206 "Cred. vs imprese sottoposte al controllo delle controllanti oltre"
+}
 
 capture confirm variable vc_3213
 if !_rc {
- label var vc_3213 "Debiti vs imprese sottoposte al controllo delle controllanti entro"
- }
+  label var vc_3213 "Debiti vs imprese sottoposte al controllo delle controllanti entro"
+}
 
 capture confirm variable vc_3214
 if !_rc {
- label var vc_3214 "Debiti vs imprese sottoposte al controllo delle controllanti oltre"
- }
-
-
-
+  label var vc_3214 "Debiti vs imprese sottoposte al controllo delle controllanti oltre"
+}
 
 
 
 capture confirm variable vc_1215
 if !_rc {
- label var vc_1215 "proventi da partecip. da imprese controllanti"
- }
+  label var vc_1215 "proventi da partecip. da imprese controllanti"
+}
 
 capture confirm variable vc_1216
 if !_rc {
- label var vc_1216 "proventi da partecip. da imprese sottoposte al controllo delle controllanti"
- }
+  label var vc_1216 "proventi da partecip. da imprese sottoposte al controllo delle controllanti"
+}
 
 capture confirm variable vc_1217
 if !_rc {
- label var vc_1217 "altri proventi da crediti da imprese sottoposte al controllo delle controllanti"
- }
+  label var vc_1217 "altri proventi da crediti da imprese sottoposte al controllo delle controllanti"
+}
 
 capture confirm variable vc_1218
 if !_rc {
- label var vc_1218 "Proventi fin. diversi da imprese sottoposte al controllo delle controllanti"
- }
+  label var vc_1218 "Proventi fin. diversi da imprese sottoposte al controllo delle controllanti"
+}
 
 capture confirm variable vc_1219
 if !_rc {
- label var vc_1219 "Totale Oneri finanziari da imprese sottoposte al controllo delle controllanti"
- }
+  label var vc_1219 "Totale Oneri finanziari da imprese sottoposte al controllo delle controllanti"
+}
 
 capture confirm variable vc_1220
 if !_rc {
- label var vc_1220 "Rivalutazioni di strumenti finanziari derivati"
- }
+  label var vc_1220 "Rivalutazioni di strumenti finanziari derivati"
+}
 
 capture confirm variable vc_1221
 if !_rc {
- label var vc_1221 "Rivalutazioni di attività finanziarie per la gestione accentrata della tesoreria"
- }
+  label var vc_1221 "Rivalutazioni di attività finanziarie per la gestione accentrata della tesoreria"
+}
 
 capture confirm variable vc_1222
 if !_rc {
- label var vc_1222 "Svalutazioni di strumenti finanziari derivati"
- }
+  label var vc_1222 "Svalutazioni di strumenti finanziari derivati"
+}
 
 capture confirm variable vc_1223
 if !_rc {
- label var vc_1223 "Svalutazioni di attività finanziarie per la gestione accentrata della tesoreria"
- }
+  label var vc_1223 "Svalutazioni di attività finanziarie per la gestione accentrata della tesoreria"
+}
 
 capture confirm variable vc_1224
 if !_rc {
- label var vc_1224 "Imposte relative a esercizi precedenti"
- }
+  label var vc_1224 "Imposte relative a esercizi precedenti"
+}
 
 capture confirm variable vc_1235
 if !_rc {
- label var vc_1235 "Imposte differite (+/-)"
- }
+  label var vc_1235 "Imposte differite (+/-)"
+}
 
 capture confirm variable vc_1236
 if !_rc {
- label var vc_1236 "Imposte anticipate (+/-)"
- }
+  label var vc_1236 "Imposte anticipate (+/-)"
+}
 
 capture confirm variable vc_1237
 if !_rc {
- label var vc_1237 "Prov. (oneri) da adesione al regime di trasparenza fiscale"
- }
+  label var vc_1237 "Prov. (oneri) da adesione al regime di trasparenza fiscale"
+}
 
 capture confirm variable vc_1225
 if !_rc {
- label var vc_1225 "Avviamento/Differenza di consolidamento di cui Avviamento"
- }
+  label var vc_1225 "Avviamento/Differenza di consolidamento di cui Avviamento"
+}
 
 capture confirm variable vc_1226
 if !_rc {
- label var vc_1226 "Beni materiali concessi in locazione finanziaria"
- }
+  label var vc_1226 "Beni materiali concessi in locazione finanziaria"
+}
 
 capture confirm variable vc_1227
 if !_rc {
- label var vc_1227 "IMMOB. FINANZIARIE esigibili entro l'esercizio successivo"
- }
+  label var vc_1227 "IMMOB. FINANZIARIE esigibili entro l'esercizio successivo"
+}
 
 capture confirm variable vc_1200
 if !_rc {
- label var vc_1200 "Partecipazioni in imprese sottoposte al controllo delle controllanti"
- }
+  label var vc_1200 "Partecipazioni in imprese sottoposte al controllo delle controllanti"
+}
 
 capture confirm variable vc_1203
 if !_rc {
- label var vc_1203 "Strumenti finanziari derivati attivi"
- }
+  label var vc_1203 "Strumenti finanziari derivati attivi"
+}
 
 capture confirm variable vc_1207
 if !_rc {
- label var vc_1207 "Partec.ni in imprese sottoposte al controllo delle controllanti"
- }
+  label var vc_1207 "Partec.ni in imprese sottoposte al controllo delle controllanti"
+}
 
 capture confirm variable vc_1208
 if !_rc {
- label var vc_1208 "Strumenti finanziari derivati attivi"
- }
+  label var vc_1208 "Strumenti finanziari derivati attivi"
+}
 
 capture confirm variable vc_1209
 if !_rc {
- label var vc_1209 "Attività finanziarie per la gestione accentrata della tesoreria"
- }
+  label var vc_1209 "Attività finanziarie per la gestione accentrata della tesoreria"
+}
 
 capture confirm variable vc_1228
 if !_rc {
- label var vc_1228 "Versamenti soci in c/capitale"
- }
+  label var vc_1228 "Versamenti soci in c/capitale"
+}
 
 capture confirm variable vc_1229
 if !_rc {
- label var vc_1229 "Versamenti in c/futuro aumento di capitale"
- }
+  label var vc_1229 "Versamenti in c/futuro aumento di capitale"
+}
 
 capture confirm variable vc_1230
 if !_rc {
- label var vc_1230 "Versamenti in c/capitale"
- }
+  label var vc_1230 "Versamenti in c/capitale"
+}
 
 capture confirm variable vc_1231
 if !_rc {
- label var vc_1231 "Versamenti a copertura perdite"
- }
+  label var vc_1231 "Versamenti a copertura perdite"
+}
 
 capture confirm variable vc_1232
 if !_rc {
- label var vc_1232 "Acconto dividendi"
- }
+  label var vc_1232 "Acconto dividendi"
+}
 
 capture confirm variable vc_1233
 if !_rc {
- label var vc_1233 "Copertura parziale perdita di esercizio"
- }
+  label var vc_1233 "Copertura parziale perdita di esercizio"
+}
 
 capture confirm variable vc_1234
 if !_rc {
- label var vc_1234 "Imposte differite di capitale e riserve di pertinenza di TERZI"
- }
+  label var vc_1234 "Imposte differite di capitale e riserve di pertinenza di TERZI"
+}
 
 capture confirm variable vc_1212
 if !_rc {
- label var vc_1212 "Strumenti finanziari derivati passivi"
- note vc_1212: B.3.
- }
+  label var vc_1212 "Strumenti finanziari derivati passivi"
+  note vc_1212: B.3.
+}
 
 
 exit
-
