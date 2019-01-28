@@ -125,6 +125,7 @@ program define dest_prov
   replace `1'="105"   if `1'=="Ogliastra"
   replace `1'="104"   if `1'=="Olbia-Tempio"
   replace `1'="107"   if `1'=="Carbonia-Iglesias"
+  replace `1'="111"   if `1'=="Sud Sardegna"
   replace `1'="" if inlist(`1',"-","Emilia-Romagna","Friuli-Venezia Giulia","Lazio","Lombardia","Umbria")
   destring `1', replace
   confirm numeric variable `1'
@@ -714,7 +715,8 @@ label define cod_prov 001 "Torino"                                              
                       107 "Carbonia-Iglesias"                                                 ///
                       108 "Monza Brianza"                                                     ///
                       109 "Fermo"                                                             ///
-                      110 "Barletta-Andria-Trani"
+                      110 "Barletta-Andria-Trani"                                             ///
+                      111 "Sud Sardegna"
 
 capture label drop cod_reg
 label define cod_reg   1 "Piemonte"                 ///
@@ -725,9 +727,9 @@ label define cod_reg   1 "Piemonte"                 ///
                        6  "Friuli Venezia Giulia"    ///
                        7  "Liguria"                  ///
                        8  "Emilia-Romagna"           ///
-                       9 "Toscana"                  ///
+                       9  "Toscana"                  ///
                        10 "Umbria"                   ///
-                       11  "Marche"                   ///
+                       11 "Marche"                   ///
                        12 "Lazio"                    ///
                        13 "Abruzzo"                  ///
                        14 "Molise"                   ///
@@ -1038,7 +1040,8 @@ if !_rc {
                   ("S.R.L. a capitale ridotto" = 32 "S.R.L. a capitale ridotto")  ///
                   ("Società consortile cooperativa a responsabilità limitata" = 33 "Società consortile cooperativa a responsabilità limitata")  ///
                   ("Società di mutuo soccorso" = 34 "Società di mutuo soccorso")  ///
-                  ("Azienda speciale" "Azienda speciale ai sensi del D.lgs. 267/2000"= 35 "Azienda speciale"), gen(h14)
+                  ("Azienda speciale" "Azienda speciale ai sensi del D.lgs. 267/2000"= 35 "Azienda speciale")  ///
+                  ("Società cooperativa europea" = 36 "Società cooperativa europea"), gen(h14)
                   count if h14==.
 assert r(N) == `pre'
 **fre formgiur if h14==.
@@ -1089,6 +1092,20 @@ if !_rc {
   drop accmodel
 }
 
+
+capture confirm variable accformat
+if !_rc {
+  count if accformat==""
+  local pre = r(N)
+  strrec accformat ("ICS" = 1 "Società industriali, commerciali e di servizi") ///
+                   ("FIN" = 2 "Società di intermediazione finanziaria")  ///
+                   ("SIM" = 3 "Società di intermediazione mobiliare")  ///
+                   ("BNK" = 4 "Banche")  ///
+                   ("INS" = 5 "Assicurazioni"), replace
+  count if accformat==.
+  assert `pre'==r(N)
+  label var accformat "Schema di bilancio"
+}
 
 
 
@@ -2994,4 +3011,1041 @@ if !_rc {
 }
 
 
-exit
+
+/*** BANCHE ***/
+**Stato patrimoniale - Banche (BNK)
+**Attivo
+capture confirm variable vc_5000
+if !_rc {
+label var vc_5000 "Cassa e disponibilità liquide"
+}
+
+capture confirm variable vc_5001
+if !_rc {
+label var vc_5001 "Attività finanziarie detenute per la negoziazione"
+}
+
+capture confirm variable vc_5002
+if !_rc {
+label var vc_5002 "Attività finanziarie valutate al fair value"
+}
+
+capture confirm variable vc_5003
+if !_rc {
+label var vc_5003 "Attività finanziarie disponibili per la vendita"
+}
+
+capture confirm variable vc_5004
+if !_rc {
+label var vc_5004 "Attività finanziarie detenute sino alla scadenza"
+}
+
+capture confirm variable vc_5005
+if !_rc {
+label var vc_5005 "Crediti verso banche"
+}
+
+capture confirm variable vc_5006
+if !_rc {
+label var vc_5006 "Crediti verso clientela"
+}
+
+capture confirm variable vc_5007
+if !_rc {
+label var vc_5007 "Derivati di copertura"
+}
+
+capture confirm variable vc_5008
+if !_rc {
+label var vc_5008 "Adeguamento di valore delle attività finanziarie oggetto di copertura generica (+/-)"
+}
+
+capture confirm variable vc_5009
+if !_rc {
+label var vc_5009 "Partecipazioni"
+}
+
+capture confirm variable vc_5010
+if !_rc {
+label var vc_5010 "Riserve tecniche a carico dei riassicuratori"
+}
+
+capture confirm variable vc_5011
+if !_rc {
+label var vc_5011 "Attività materiali"
+}
+
+capture confirm variable vc_5012
+if !_rc {
+label var vc_5012 "Attività immateriali"
+}
+
+capture confirm variable vc_5013
+if !_rc {
+label var vc_5013 "Attività immateriali, di cui: avviamento"
+}
+
+capture confirm variable vc_5014
+if !_rc {
+label var vc_5014 "Attività fiscali"
+}
+
+capture confirm variable vc_5015
+if !_rc {
+label var vc_5015 "Attività fiscali correnti"
+}
+
+capture confirm variable vc_5016
+if !_rc {
+label var vc_5016 "Attività fiscali anticipate"
+}
+
+capture confirm variable vc_5017
+if !_rc {
+label var vc_5017 "Attività non correnti e gruppi di attività in via di dismissione"
+}
+
+capture confirm variable vc_5018
+if !_rc {
+label var vc_5018 "Altre attività"
+}
+
+**Passivo
+capture confirm variable vc_5020
+if !_rc {
+label var vc_5020 "Debiti verso banche"
+}
+
+capture confirm variable vc_5021
+if !_rc {
+label var vc_5021 "Debiti verso clientela"
+}
+
+capture confirm variable vc_5022
+if !_rc {
+label var vc_5022 "Titoli in circolazione"
+}
+
+capture confirm variable vc_5023
+if !_rc {
+label var vc_5023 "Passività finanziarie di negoziazione"
+}
+
+capture confirm variable vc_5024
+if !_rc {
+label var vc_5024 "Passività finanziarie valutate al fair value"
+}
+
+capture confirm variable vc_5025
+if !_rc {
+label var vc_5025 "Derivati di copertura"
+}
+
+capture confirm variable vc_5026
+if !_rc {
+label var vc_5026 "Adeguamento di valore delle passività finanziarie oggetto di copertura generica (+/-)"
+}
+
+capture confirm variable vc_5027
+if !_rc {
+label var vc_5027 "Passività fiscali"
+}
+
+capture confirm variable vc_5028
+if !_rc {
+label var vc_5028 "Passività fiscali correnti"
+}
+
+capture confirm variable vc_5029
+if !_rc {
+label var vc_5029 "Passività fiscali differite"
+}
+
+capture confirm variable vc_5030
+if !_rc {
+label var vc_5030 "Passività associate ad attività in via di dismissione"
+}
+
+capture confirm variable vc_5031
+if !_rc {
+label var vc_5031 "Altre passività"
+}
+
+capture confirm variable vc_5032
+if !_rc {
+label var vc_5032 "Trattamento di fine rapporto del personale"
+}
+
+capture confirm variable vc_5033
+if !_rc {
+label var vc_5033 "Fondi per rischi ed oneri"
+}
+
+capture confirm variable vc_5034
+if !_rc {
+label var vc_5034 "Fondi per rischi ed oneri : quiescenza e obblighi simili"
+}
+
+capture confirm variable vc_5035
+if !_rc {
+label var vc_5035 "Fondi per rischi ed oneri : altri fondi"
+}
+
+capture confirm variable vc_5036
+if !_rc {
+label var vc_5036 "Riserve tecniche"
+}
+
+capture confirm variable vc_5037
+if !_rc {
+label var vc_5037 "Riserve da valutazione"
+}
+
+capture confirm variable vc_5038
+if !_rc {
+label var vc_5038 "Azioni rimborsabili"
+}
+
+capture confirm variable vc_5039
+if !_rc {
+label var vc_5039 "Strumenti di capitale"
+}
+
+capture confirm variable vc_5040
+if !_rc {
+label var vc_5040 "Riserve"
+}
+
+capture confirm variable vc_5041
+if !_rc {
+label var vc_5041 "Sovrapprezzi di emissione"
+}
+
+capture confirm variable vc_5042
+if !_rc {
+label var vc_5042 "Capitale"
+}
+
+capture confirm variable vc_5043
+if !_rc {
+label var vc_5043 "Azioni proprie (-)"
+}
+
+capture confirm variable vc_5044
+if !_rc {
+label var vc_5044 "Patrimonio di pertinenza di terzi (+/-)"
+}
+
+capture confirm variable vc_5045
+if !_rc {
+label var vc_5045 "Utile (perdita) d'esercizio (+/-)"
+}
+
+
+
+
+
+
+**Conto economico - Banche (BNK)
+capture confirm variable vc_5047
+if !_rc {
+label var vc_5047 "Interessi attivi e proventi assimilati"
+}
+
+capture confirm variable vc_5048
+if !_rc {
+ label var vc_5048 "Interessi passivi e oneri assimilati"
+}
+
+capture confirm variable vc_5049
+if !_rc {
+label var vc_5049 "Margine di interesse"
+}
+
+capture confirm variable vc_5050
+if !_rc {
+label var vc_5050 "Commissioni attive"
+}
+
+capture confirm variable vc_5051
+if !_rc {
+label var vc_5051 "Commissioni passive"
+}
+
+capture confirm variable vc_5052
+if !_rc {
+label var vc_5052 "Commissioni nette"
+}
+
+capture confirm variable vc_5053
+if !_rc {
+label var vc_5053 "Dividendi e proventi simili"
+}
+
+capture confirm variable vc_5054
+if !_rc {
+label var vc_5054 "Risultato netto dell'attività di negoziazione"
+}
+
+capture confirm variable vc_5055
+if !_rc {
+label var vc_5055 "Risultato netto dell'attività di copertura"
+}
+
+capture confirm variable vc_5056
+if !_rc {
+label var vc_5056 "Utile/perdita da cessione o riacquisto"
+}
+
+capture confirm variable vc_5057
+if !_rc {
+label var vc_5057 "Utile/perdita da cessione o riacquisto di crediti"
+}
+
+capture confirm variable vc_5058
+if !_rc {
+label var vc_5058 "Utile/perdita da cessione o riacquisto di attività finanziarie disponibili per la vendita"
+}
+
+capture confirm variable vc_5059
+if !_rc {
+label var vc_5059 "Utile/perdita da cessione o riacquisto di attività finanziarie detenute sino alla scadenza"
+}
+
+capture confirm variable vc_5060
+if !_rc {
+label var vc_5060 "Utile/perdita da cessione o riacquisto di passività finanziarie"
+}
+
+capture confirm variable vc_5061
+if !_rc {
+label var vc_5061 "Risultato netto delle attività e passività finanziarie valutate al fair value"
+}
+
+capture confirm variable vc_5062
+if !_rc {
+label var vc_5062 "Margine di intermediazione"
+}
+
+capture confirm variable vc_5063
+if !_rc {
+label var vc_5063 "Rettifiche/riprese di valore nette per deterioramento"
+}
+
+capture confirm variable vc_5064
+if !_rc {
+label var vc_5064 "Rettifiche/riprese di valore nette per deterioramento di crediti"
+}
+
+capture confirm variable vc_5065
+if !_rc {
+label var vc_5065 "Rettifiche/riprese di valore nette per deterioramento di attività finanziarie disponibili per la vendita"
+}
+
+capture confirm variable vc_5066
+if !_rc {
+label var vc_5066 "Rettifiche/riprese di valore nette per deterioramento di attività finanziarie detenute sino alla scadenza"
+}
+
+capture confirm variable vc_5067
+if !_rc {
+label var vc_5067 "Rettifiche/riprese di valore nette per deterioramento di altre operazioni finanziarie"
+}
+
+capture confirm variable vc_5068
+if !_rc {
+label var vc_5068 "Risultato netto della gestione finanziaria"
+}
+
+capture confirm variable vc_5069
+if !_rc {
+label var vc_5069 "Premi netti"
+}
+
+capture confirm variable vc_5070
+if !_rc {
+label var vc_5070 "Saldo altri proventi/oneri della gestione assicurativa"
+}
+
+capture confirm variable vc_5071
+if !_rc {
+label var vc_5071 "Risultato netto della gestione finanziaria e assicurativa"
+}
+
+capture confirm variable vc_5072
+if !_rc {
+label var vc_5072 "Spese amministrative"
+}
+
+capture confirm variable vc_5073
+if !_rc {
+label var vc_5073 "Spese amministrative per il personale"
+}
+
+capture confirm variable vc_5074
+if !_rc {
+label var vc_5074 "Altre spese amministrative"
+}
+
+capture confirm variable vc_5075
+if !_rc {
+label var vc_5075 "Accantonamenti netti ai fondi per rischi e oneri"
+}
+
+capture confirm variable vc_5076
+if !_rc {
+label var vc_5076 "Rettifiche/riprese di valore nette su attività materiali"
+}
+
+capture confirm variable vc_5077
+if !_rc {
+label var vc_5077 "Rettifiche/riprese di valore nette su attività immateriali"
+}
+
+capture confirm variable vc_5078
+if !_rc {
+label var vc_5078 "Altri oneri/proventi di gestione"
+}
+
+capture confirm variable vc_5079
+if !_rc {
+label var vc_5079 "Costi operativi"
+}
+
+capture confirm variable vc_5080
+if !_rc {
+label var vc_5080 "Utili (Perdite) delle partecipazioni"
+}
+
+capture confirm variable vc_5081
+if !_rc {
+label var vc_5081 "Risultato netto della valutazione al fair value delle attività materiali e immateriali"
+}
+
+capture confirm variable vc_5082
+if !_rc {
+label var vc_5082 "Rettifiche di valore dell'avviamento"
+}
+
+capture confirm variable vc_5083
+if !_rc {
+label var vc_5083 "Utili (Perdite) da cessione di investimenti"
+}
+
+capture confirm variable vc_5084
+if !_rc {
+label var vc_5084 "Utile (Perdita) della operatività corrente al lordo delle imposte"
+}
+
+capture confirm variable vc_5085
+if !_rc {
+label var vc_5085 "Imposte sul reddito dell'esercizio dell'operatività corrente"
+}
+
+capture confirm variable vc_5086
+if !_rc {
+label var vc_5086 "Utile (Perdita) della operatività corrente al netto delle imposte"
+}
+
+capture confirm variable vc_5087
+if !_rc {
+label var vc_5087 "Utile (Perdita) dei gruppi di attività in via di dismissione al netto delle imposte"
+}
+
+capture confirm variable vc_5088
+if !_rc {
+label var vc_5088 "Utile (Perdita) d'esercizio"
+}
+
+capture confirm variable vc_5090
+if !_rc {
+label var vc_5090 "Utile (Perdita) d'esercizio di pertinenza della capogruppo"
+}
+
+
+
+
+
+
+
+**Stato patrimoniale - Assicurazioni (INS)
+**Attivo
+capture confirm variable vc_5300
+if !_rc {
+label var vc_5300 "CREDITI VERSO SOCI PER CAPITALE SOCIALE SOTTOSCRITTO NON VERSATO"
+}
+
+capture confirm variable vc_5301
+if !_rc {
+label var vc_5301 "Capitale richiamato"
+}
+
+capture confirm variable vc_5302
+if !_rc {
+label var vc_5302 "ATTIVI IMMATERIALI"
+}
+
+capture confirm variable vc_5303
+if !_rc {
+label var vc_5303 "Provvigioni di acquisizione da ammortizzare"
+}
+
+capture confirm variable vc_5304
+if !_rc {
+label var vc_5304 "rami vita"
+}
+
+capture confirm variable vc_5305
+if !_rc {
+label var vc_5305 "rami danni"
+}
+
+capture confirm variable vc_5306
+if !_rc {
+label var vc_5306 "Altre spese di acquisizione"
+}
+
+capture confirm variable vc_5307
+if !_rc {
+label var vc_5307 "Costi di impianto e di ampliamento"
+}
+
+capture confirm variable vc_5308
+if !_rc {
+label var vc_5308 "Avviamento"
+}
+
+capture confirm variable vc_5309
+if !_rc {
+label var vc_5309 "Altri costi pluriennali"
+}
+
+capture confirm variable vc_5310
+if !_rc {
+label var vc_5310 "Altri attivi immateriali"
+}
+
+capture confirm variable vc_5311
+if !_rc {
+label var vc_5311 "Differenza da consolidamento"
+}
+
+capture confirm variable vc_5312
+if !_rc {
+label var vc_5312 "INVESTIMENTI"
+}
+
+capture confirm variable vc_5313
+if !_rc {
+label var vc_5313 "Terreni e Fabbricati"
+}
+
+capture confirm variable vc_5314
+if !_rc {
+label var vc_5314 "Immobili destinati all'esercizio dell'impresa"
+}
+
+capture confirm variable vc_5315
+if !_rc {
+label var vc_5315 "Immobili ad uso di terzi"
+}
+
+capture confirm variable vc_5316
+if !_rc {
+label var vc_5316 "Altri Immobili"
+}
+
+capture confirm variable vc_5317
+if !_rc {
+label var vc_5317 "Altri diritti reali"
+}
+
+capture confirm variable vc_5318
+if !_rc {
+label var vc_5318 "Immobilizzazioni in corso e acconti"
+}
+
+capture confirm variable vc_5319
+if !_rc {
+label var vc_5319 "Investimenti in imprese del gruppo ed in altre partecipate"
+}
+
+capture confirm variable vc_5320
+if !_rc {
+label var vc_5320 "Azioni e quote di imprese:"
+}
+
+capture confirm variable vc_5321
+if !_rc {
+label var vc_5321 "controllanti"
+}
+
+capture confirm variable vc_5322
+if !_rc {
+label var vc_5322 "controllate"
+}
+
+capture confirm variable vc_5323
+if !_rc {
+label var vc_5323 "consociate"
+}
+
+capture confirm variable vc_5324
+if !_rc {
+label var vc_5324 "collegate"
+}
+
+capture confirm variable vc_5325
+if !_rc {
+label var vc_5325 "altre"
+}
+
+
+
+
+
+capture confirm variable vc_5326
+if !_rc {
+label var vc_5326 "Obbligazioni emesse da imprese:"
+}
+
+capture confirm variable vc_5327
+if !_rc {
+label var vc_5327 "controllanti"
+}
+
+capture confirm variable vc_5328
+if !_rc {
+label var vc_5328 "controllate"
+}
+
+capture confirm variable vc_5329
+if !_rc {
+label var vc_5329 "consociate"
+}
+
+capture confirm variable vc_5330
+if !_rc {
+label var vc_5330 "collegate"
+}
+
+capture confirm variable vc_5331
+if !_rc {
+label var vc_5331 "altre"
+}
+
+capture confirm variable vc_5332
+if !_rc {
+label var vc_5332 "Finanziamenti ad imprese:"
+}
+
+capture confirm variable vc_5333
+if !_rc {
+label var vc_5333 "controllanti"
+}
+
+capture confirm variable vc_5334
+if !_rc {
+label var vc_5334 "controllate"
+}
+
+capture confirm variable vc_5335
+if !_rc {
+label var vc_5335 "consociate"
+}
+
+capture confirm variable vc_5336
+if !_rc {
+label var vc_5336 "collegate"
+}
+
+capture confirm variable vc_5337
+if !_rc {
+label var vc_5337 "altre"
+}
+
+capture confirm variable vc_5338
+if !_rc {
+label var vc_5338 "Altri investimenti finanziari"
+}
+
+capture confirm variable vc_5339
+if !_rc {
+label var vc_5339 "Azioni e quote"
+}
+
+capture confirm variable vc_5340
+if !_rc {
+label var vc_5340 "Azioni quotate"
+}
+
+capture confirm variable vc_5341
+if !_rc {
+label var vc_5341 "Azioni non quotate"
+}
+
+capture confirm variable vc_5342
+if !_rc {
+label var vc_5342 "Quote"
+}
+
+capture confirm variable vc_5343
+if !_rc {
+label var vc_5343 "Quote di fondi comuni di investimento"
+}
+
+capture confirm variable vc_5344
+if !_rc {
+label var vc_5344 "Obbligazioni e altri titoli a reddito fisso"
+}
+
+capture confirm variable vc_5345
+if !_rc {
+label var vc_5345 "quotati"
+}
+
+capture confirm variable vc_5346
+if !_rc {
+label var vc_5346 "non quotati"
+}
+
+capture confirm variable vc_5347
+if !_rc {
+label var vc_5347 "obbligazioni convertibili"
+}
+
+capture confirm variable vc_5348
+if !_rc {
+label var vc_5348 "Finanziamenti"
+}
+
+capture confirm variable vc_5349
+if !_rc {
+label var vc_5349 "prestiti con garanzia reale"
+}
+
+capture confirm variable vc_5350
+if !_rc {
+label var vc_5350 "prestiti su polizze"
+}
+
+capture confirm variable vc_5351
+if !_rc {
+label var vc_5351 "altri prestiti"
+}
+
+capture confirm variable vc_5352
+if !_rc {
+label var vc_5352 "Quote in investimenti comuni"
+}
+
+capture confirm variable vc_5353
+if !_rc {
+label var vc_5353 "Depositi presso enti creditizi"
+}
+
+capture confirm variable vc_5354
+if !_rc {
+label var vc_5354 "Investimenti finanziari diversi"
+}
+
+capture confirm variable vc_5355
+if !_rc {
+label var vc_5355 "Depositi presso imprese cedenti"
+}
+
+capture confirm variable vc_5356
+if !_rc {
+label var vc_5356 "INVEST. A BENEF. ASSICUR. RAMI VITA E DERIVANTI DALLA GEST. F. DI PENSIONE"
+}
+
+capture confirm variable vc_5357
+if !_rc {
+label var vc_5357 "Invest. relativi a prestazioni connesse con fondi di invest. e indici di mercato"
+}
+
+capture confirm variable vc_5358
+if !_rc {
+label var vc_5358 "Invest. derivanti dalla gestione dei fondi pensione"
+}
+
+
+
+
+
+
+capture label var vc_5359 "RISERVE TECNICHE A CARICO DEI RIASSICURATORI"
+capture label var vc_5360 "RAMI DANNI"
+capture label var vc_5361 "Riserva premi"
+capture label var vc_5362 "Riserva sinistri"
+capture label var vc_5363 "Riserva per partecipazioni agli utili e ristorni"
+capture label var vc_5364 "Altre riserve tecniche"
+capture label var vc_5365 "RAMI VITA"
+capture label var vc_5366 "Riserve matematiche"
+capture label var vc_5367 "Riserva premi delle assicurazioni complementari"
+capture label var vc_5368 "Riserva per somme da pagare"
+capture label var vc_5369 "Riserva per partecipazione agli utili e ristorni"
+capture label var vc_5370 "Altre riserve tecniche"
+capture label var vc_5371 "Ris. Tecn. Per rischio invest.sopportato assicur. e f.di pensione"
+capture label var vc_5372 "CREDITI"
+capture label var vc_5373 "Crediti, derivanti da operazioni di assicurazione diretta, nei confronti di:"
+capture label var vc_5374 "Assicurati"
+capture label var vc_5375 "per premi dell'esercizio"
+capture label var vc_5376 "per premi degli es. precedenti"
+capture label var vc_5377 "Intermediari di assicurazione"
+capture label var vc_5378 "Compagnie conti correnti"
+capture label var vc_5379 "Assicurati e terzi per somme da recuperare"
+capture label var vc_5380 "Crediti, derivanti da operazioni di riassicurazione, nei confronti di:"
+capture label var vc_5381 "Compagnie di assicurazione e riassicurazione"
+capture label var vc_5382 "Intermediari di riassicurazione"
+capture label var vc_5383 "Altri crediti"
+capture label var vc_5384 "ALTRI ELEMENTI DELL'ATTIVO"
+capture label var vc_5385 "Attivi materiali e scorte"
+capture label var vc_5386 "Mobili,macchine d'ufficio e mezzi di trasporto interno"
+capture label var vc_5387 "Beni mobili iscritti in pubblici registri"
+capture label var vc_5388 "Impianti e attrezzature"
+capture label var vc_5389 "Scorte e beni diversi"
+capture label var vc_5390 "Disponibilita' liquide"
+capture label var vc_5391 "Depositi bancari e c/c postali"
+capture label var vc_5392 "Assegni e consistenza di cassa"
+capture label var vc_5393 "Azioni o quote proprie"
+capture label var vc_5394 "Altre attivita"
+capture label var vc_5395 "Conti transitori attivi di riassicurazione"
+capture label var vc_5396 "Attivita diverse"
+capture label var vc_5397 "RATEI E RISCONTI"
+capture label var vc_5398 "Per interessi"
+capture label var vc_5399 "Per canoni di locazione"
+capture label var vc_5400 "Altri ratei e risconti"
+
+
+
+**Passivo
+capture label var vc_5402 "PATRIMONIO NETTO"
+capture label var vc_5403 "Capitale sociale sottoscritto o fondo equivalente"
+capture label var vc_5404 "Riserva da sovraprezzo di emissione"
+capture label var vc_5405 "Riserva di rivalutazione"
+capture label var vc_5406 "Riserva legale"
+capture label var vc_5407 "Riserve statutarie"
+capture label var vc_5408 "Riserve per azioni proprie e della controllante"
+capture label var vc_5409 "Altre Riserve"
+capture label var vc_5410 "Utili (perdite) portati a nuovo"
+capture label var vc_5411 "Utile (perdite) dell'esercizio"
+capture label var vc_5412 "PATRIMONIO NETTO DEL GRUPPO"
+capture label var vc_5413 "Capitale sociale sottoscritto o fondo equivalente"
+capture label var vc_5414 "Riserve patrimoniali"
+capture label var vc_5415 "Riserva di consolidamento"
+capture label var vc_5416 "Riserva per differ. di valutaz. su partecip. non consol."
+capture label var vc_5417 "Riserva per differenze di conversione"
+capture label var vc_5418 "Riserva per azioni proprie e della controllante"
+capture label var vc_5419 "Utile (perdita) dell'esercizio"
+capture label var vc_5420 "PATRIMONIO NETTO DI TERZI"
+capture label var vc_5421 "Capitale e riserve di terzi"
+capture label var vc_5422 "Utile (perdita) dell'esercizio di pertinenza di terzi"
+capture label var vc_5423 "PASSIVITA' SUBORDINATE"
+capture label var vc_5424 "RISERVE TECNICHE"
+capture label var vc_5425 "RAMI DANNI"
+capture label var vc_5426 "Riserva premi"
+capture label var vc_5427 "Riserva sinistri"
+capture label var vc_5428 "Riserva per partecipazione agli utili e ristorni"
+capture label var vc_5429 "Altre riserve tecniche"
+capture label var vc_5430 "Riserve di perequazione"
+capture label var vc_5431 "RAMI VITA"
+capture label var vc_5432 "Riserve matematiche"
+capture label var vc_5433 "Riserva premi delle assicurazioni complementari"
+capture label var vc_5434 "Riserva per somme da pagare"
+capture label var vc_5435 "Riserva per partecipazione agli utili e ristorni"
+capture label var vc_5436 "Altre riserve tecniche"
+capture label var vc_5437 "RIS. TEC. PER RISCHIO INVEST. SOPPORTATO ASSIC. E F.DI PENSIONE"
+capture label var vc_5438 "Ris. relative a contr. le cui prest. sono connese con f.di di invest.e indici merc."
+capture label var vc_5439 "Riserve derivanti dalla gestione dei fondi pensione"
+capture label var vc_5440 "FONDI PER RISCHI E ONERI"
+capture label var vc_5441 "Fondi per trattamenti di quiescenza ed obblighi simili"
+capture label var vc_5442 "Fondi per imposte"
+capture label var vc_5443 "Fondi di consolidamento per rischi e oneri futuri"
+capture label var vc_5444 "Altri accantonamenti"
+capture label var vc_5445 "DEPOSITI RICEVUTI DA RIASSICURATORI"
+capture label var vc_5446 "DEBITI E ALTRE PASSIVITA'"
+capture label var vc_5447 "Debiti, derivanti da operazioni di assicurazione diretta, nei confronti di:"
+capture label var vc_5448 "Intermediari di assicurazione"
+capture label var vc_5449 "Compagnie conti correnti"
+capture label var vc_5450 "Assicurati per depositi cauzionali e premi"
+capture label var vc_5451 "Fondi di garanzia a favore degli assicurati"
+capture label var vc_5452 "Debiti, derivanti da operazioni di riassicurazione, nei confornti di:"
+capture label var vc_5453 "Compagnie di assicurazione e riassicurazione"
+capture label var vc_5454 "Intermediari di riassicurazione"
+capture label var vc_5455 "Prestiti Obbligazionari"
+capture label var vc_5456 "Debiti verso banche e istituti finanziari"
+capture label var vc_5457 "Debiti con garanzia reale"
+capture label var vc_5458 "Prestiti diversi e altri debiti finanziari"
+capture label var vc_5459 "Trattamento di fine rapporto di lavoro subordinato"
+capture label var vc_5460 "Altri Debiti"
+capture label var vc_5461 "Per imposte a carico degli assicurati"
+capture label var vc_5462 "Per oneri tributari diversi"
+capture label var vc_5463 "Verso enti assistenziali e previdenziali"
+capture label var vc_5464 "Debiti diversi"
+capture label var vc_5465 "Altre passivita"
+capture label var vc_5466 "Conti transitori passivi di riassicurazione"
+capture label var vc_5467 "Provvigioni per premi in corso di riscossione"
+capture label var vc_5468 "Passivita diverse"
+capture label var vc_5469 "RATEI E RISCONTI"
+capture label var vc_5470 "Per interessi"
+capture label var vc_5471 "Per canoni di locazione"
+capture label var vc_5472 "Altri ratei e risconti"
+capture label var vc_5474 "Garanzie prestate"
+capture label var vc_5475 "Fidejussioni"
+capture label var vc_5476 "Avalli"
+capture label var vc_5477 "Altre garanzie personali"
+capture label var vc_5478 "Garanzie reali"
+capture label var vc_5479 "Garanzie ricevute"
+capture label var vc_5480 "Fidejussioni"
+capture label var vc_5481 "Avalli"
+capture label var vc_5482 "Altre garanzie personali"
+capture label var vc_5483 "Garanzie reali"
+capture label var vc_5484 "Garanzie prestate da terzi nell'interesse dell'impresa"
+capture label var vc_5485 "Impegni"
+capture label var vc_5486 "Beni di terzi"
+capture label var vc_5487 "Attività di pertinenza dei fondi pensione gestiti in nome e per conto di terzi"
+capture label var vc_5488 "Titoli depositati presso terzi"
+capture label var vc_5489 "Altri conti d'ordine"
+
+**Conto economico - Assicurazioni (INS)
+**Conto tecnico del ramo non vita
+capture label var vc_5490 "PREMI DI COMPETENZA AL NETTO DELLE CESSIONI IN RIASS."
+capture label var vc_5491 "Premi lordi contabilizzati"
+capture label var vc_5492 "Premi ceduti in riassicurazione"
+capture label var vc_5493 "Variazione dell'importo lordo della riserva premi"
+capture label var vc_5494 "Variazione della riserva premi a carico dei riassicuratori"
+capture label var vc_5495 "QUOTA DELL'UT. DEGLI INVEST. TRASFERITA DAL CONTO NON TECN."
+capture label var vc_5496 "ALTRI PROVENTI TECNICI, AL NETTO DELLE CESSIONI IN RIASS."
+capture label var vc_5497 "ONERI RELATIVI AI SINISTRI, AL NETTO DEI RECUP. E DELLE CES. IN RIASS."
+capture label var vc_5498 "importi pagati"
+capture label var vc_5499 "importo lordo"
+capture label var vc_5500 "quote a carico dei riassicuratori"
+capture label var vc_5501 "Variazione dei recuperi al netto delle quote a carico dei riass."
+capture label var vc_5502 "importo lordo"
+capture label var vc_5503 "quote a carico dei riassicuratori"
+capture label var vc_5504 "variazione della riserva sinistri"
+capture label var vc_5505 "importo lordo"
+capture label var vc_5506 "quote a carico dei riassicuratori"
+capture label var vc_5507 "VARIAZIONE DELLE ALTRE RIS. TECN., AL NETTO DELLE CESS. IN RIASS."
+capture label var vc_5508 "RISTORNI E PARTECIP. AGLI UTILI, AL NETTO DELLE CESS. IN RIASS."
+capture label var vc_5509 "SPESE DI GESTIONE"
+capture label var vc_5510 "Provvigioni di acquisizione"
+capture label var vc_5511 "Altre spese di acquisizione"
+capture label var vc_5512 "Variaz. delle provvig. e delle altre spese di acquis. da ammort."
+capture label var vc_5513 "Provvigioni di incasso"
+capture label var vc_5514 "Altre spese di amministrazione"
+capture label var vc_5515 "Provvigioni e partecipazioni agli utili ricevute dai riass."
+capture label var vc_5516 "ALTRI ONERI TECNICI, AL NETTO DELLE CESSIONI IN RIASSICURAZIONE"
+capture label var vc_5517 "VARIAZIONE DELLE RISERVE DI PEREQUAZIONE"
+capture label var vc_5518 "RISULTATO DEL CONTO TECNICO DEI RAMI DANNI"
+
+**Conto tecnico del ramo vita
+capture label var vc_5519 "PREMI DELL'ESERCIZIO, AL NETTO DELLE CESSIONI IN RIASS."
+capture label var vc_5520 "Premi lordi contabilizzati"
+capture label var vc_5521 "premi ceduti in riassicurazione"
+capture label var vc_5522 "PROVENTI DA INVESTIMENTI"
+capture label var vc_5523 "Proventi derivanti da azioni e quote"
+capture label var vc_5524 "di cui: provenienti da imprese del gruppo"
+capture label var vc_5525 "Proventi derivanti da altri investimenti:"
+capture label var vc_5526 "da terreni e fabbricati"
+capture label var vc_5527 "da altri investimenti"
+capture label var vc_5528 "di cui: provenienti da imprese del gruppo"
+capture label var vc_5529 "Riprese di rettifiche di valore sugli investimenti"
+capture label var vc_5530 "Profitti sul realizzo di investimenti"
+capture label var vc_5531 "di cui: provenienti da imprese del gruppo"
+capture label var vc_5532 "QUOTA UTILE DEGLI INVEST. TRASF. DAL C.TO NON TECNICO"
+capture label var vc_5533 "PROV. E PLUS. NON REALIZ. INVEST ASSIC E INVEST.DEI F. PENSIONE"
+capture label var vc_5534 "ALTRI PROVENTI TECNICI, AL NETTO DELLE CESSIONI IN RIASS."
+capture label var vc_5535 "ONERI RELATIVI AI SINISTRI, AL NETTO DELLE CESSIONI IN RIASS."
+capture label var vc_5536 "Somme pagate"
+capture label var vc_5537 "Importo lordo"
+capture label var vc_5538 "Quote a carico dei riassicuratori"
+capture label var vc_5539 "Variazione della riserva per somme da pagare"
+capture label var vc_5540 "Importo lordo"
+capture label var vc_5541 "Quote a carico dei riassicuratori"
+capture label var vc_5542 "VARIAZ. RISER MATEM E RISER TECN. AL NETTO DELLE CESS. RIASS."
+capture label var vc_5543 "Riserve matematiche:"
+capture label var vc_5544 "Importo lordo"
+capture label var vc_5545 "Quote a carico dei riassicuratori"
+capture label var vc_5546 "Riserva premi delle assicurazioni complementari:"
+capture label var vc_5547 "Importo lordo"
+capture label var vc_5548 "Quote a carico dei riassicuratori"
+capture label var vc_5549 "Altre riserve tecniche"
+capture label var vc_5550 "Importo lordo"
+capture label var vc_5551 "Quote a carico dei riassicuratori"
+capture label var vc_5552 "Riser. Tecn. rischio dell'invest assicu. e fondi pensione"
+capture label var vc_5553 "Importo lordo"
+capture label var vc_5554 "Quote a carico dei riassicuratori"
+capture label var vc_5555 "RISTORNI E PARTECIP. AGLI UTILI, AL NETTO DELLE CESS. IN RIASS."
+capture label var vc_5556 "SPESE DI GESTIONE"
+capture label var vc_5557 "Provvigioni di acquisizione"
+capture label var vc_5558 "Altre spese di acquisizione"
+capture label var vc_5559 "Variaz. Provvig spese di acquis. da ammortizzare"
+capture label var vc_5560 "Provvigioni di incasso"
+capture label var vc_5561 "Altre spese di amministrazione"
+capture label var vc_5562 "Provvig. e partecip. agli utili ricevute dai riassicu."
+capture label var vc_5563 "ONERI PATRIMONIALI E FINANZIARI"
+capture label var vc_5564 "Oneri di gest. degli invest. e interessi passivi"
+capture label var vc_5565 "Rettifiche di valore sugli investimenti"
+capture label var vc_5566 "Perdite sul realizzo di investimenti"
+capture label var vc_5567 "ON. PATR. E FIN E MINUS INVESTI.DI ASSICU. E DEI FONDI PENSIONE"
+capture label var vc_5568 "ALTRI ONERI TECNICI, AL NETTO DELLE CESSIONI IN RIASSICURAZIONE"
+capture label var vc_5569 "QUOTA DELL'UT. DEGLI INVEST. TRASFERITA AL CONTO NON TECN."
+capture label var vc_5570 "RISULTATO DEL CONTO TECNICO DEI RAMI VITA"
+capture label var vc_5571 "ONERI PATRIMONIALI E FINANZ. E MINUSVAL. NON REALIZZATE."
+capture label var vc_5572 "ALTRI ONERI TECNICI AL NETTO DELLE CESSIONI IN RIASSIC."
+capture label var vc_5573 "RISULTATO DEL CONTO TECNICO DEI RAMI VITA"
+
+**Conto non tecnico
+capture label var vc_5574 "PROVENTI DA INVESTIMENTI DEI RAMI DANNI:"
+capture label var vc_5575 "Proventi derivanti da azioni e quote"
+capture label var vc_5576 "di cui: provenienti da imprese del gruppo"
+capture label var vc_5577 "Proventi derivanti da altri investimenti"
+capture label var vc_5578 "da terreni e fabbricati"
+capture label var vc_5579 "da altri investimenti"
+capture label var vc_5580 "di cui: provenienti da imprese del gruppo"
+capture label var vc_5581 "Riprese di rettifiche di valore sugli investimenti"
+capture label var vc_5582 "Profitti sul realizzo di investimenti"
+capture label var vc_5583 "di cui: provenienti da imprese del gruppo"
+capture label var vc_5584 "QUOTA DELL'UT. INVEST TRASF. DAL CONTO TECN. DEI RAMI VITA"
+capture label var vc_5585 "ONERI PATRIMONIALI E FINANZIARI DEI RAMI DANNI"
+capture label var vc_5586 "Oneri di gestione degli investimenti e interessi passivi"
+capture label var vc_5587 "Rettifiche di valore sugli investimenti"
+capture label var vc_5588 "Perdite sul realizzo di investimenti"
+capture label var vc_5589 "QUOTA DELL'UT. INVEST TRASF. AL CONTO TECNICO DEI RAMI DANNI"
+capture label var vc_5590 "ALTRI PROVENTI"
+capture label var vc_5591 "ALTRI ONERI"
+capture label var vc_5592 "RISULTATO DELLA ATTIVITA' ORDINARIA"
+capture label var vc_5593 "PROVENTI STRAORDINARI"
+capture label var vc_5594 "ONERI STRAORDINARI"
+capture label var vc_5595 "RISULTATO DELLA ATTIVITA' STRAORDINARIA"
+capture label var vc_5596 "RISULTATO PRIMA DELLE IMPOSTE"
+capture label var vc_5597 "IMPOSTE SUL REDDITO DELL'ESERCIZIO"
+capture label var vc_5598 "UTILE (PERDITA) D'ESERCIZIO"
+capture label var vc_5599 "PROVENTI DA INVESTIMENTI"
+capture label var vc_5600 "Proventi derivanti da azioni e quote"
+capture label var vc_5601 "quote di ris. d'eserc. Su partec. Val. metodo patr.netto"
+capture label var vc_5602 "altri"
+capture label var vc_5603 "Proventi derivanti da altri investimenti"
+capture label var vc_5604 "da terreni e fabbricati"
+capture label var vc_5605 "Riprese di rettifiche di valore sugli investimenti"
+capture label var vc_5606 "Profitti sul realizzo di investimenti"
+capture label var vc_5607 "ONERI PATRIMONIALI E FINANZIARI"
+capture label var vc_5608 "Oneri di gestione degli investimenti e interessi passivi"
+capture label var vc_5609 "Rettifiche di valore sugli investimenti"
+capture label var vc_5610 "Perdite sul realizzo di investimenti"
+capture label var vc_5611 "QUOTA DELL'UT. INVEST. TRASF. AL C.TO TECN. RAMI VITA"
+capture label var vc_5612 "ALTRI PROVENTI"
+capture label var vc_5613 "ALTRI ONERI"
+capture label var vc_5614 "interessi su debiti finanziari"
+capture label var vc_5615 "oneri diversi"
+capture label var vc_5616 "RISULTATO DELLA ATTIVITA' ORDINARIA"
+capture label var vc_5617 "PROVENTI STRAORDINARI"
+capture label var vc_5618 "ONERI STRAORDINARI"
+capture label var vc_5619 "RISULTATO DELLA ATTIVITA' STRAORDINARIA"
+capture label var vc_5620 "RISULTATO PRIMA DELLE IMPOSTE"
+capture label var vc_5621 "IMPOSTE SUL REDDITO DELL'ESERCIZIO"
+capture label var vc_5622 "RISULTATO CONSOLIDATO"
+capture label var vc_5623 "UTILE (PERDITA) DELL'ESERCIZIO DI PERTINENZA DI TERZI"
+capture label var vc_5624 "UTILE (PERDITA DI GRUPPO)"
