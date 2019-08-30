@@ -23,6 +23,7 @@ foreach V of varlist `r(varlist)' {
 
   local namevar = `V' in 2
   local namevar = lower("`namevar'")
+  if "`YY'"==""  local namevar: permname `namevar', length(32)
 
   if "`YY'"!=""  rename `V' vc_`namevar'`YY'
   else rename `V' `namevar'

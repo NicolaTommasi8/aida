@@ -1082,6 +1082,8 @@ capture confirm variable accmodel
 if !_rc {
   capture confirm string variable accmodel
   if !_rc {
+    replace accmodel = trim(accmodel)
+    fre accmodel
     strrec accmodel ("Abbreviato"     = 1 "Abbreviato") ///
                     ("Abbreviato (D)" = 2 "Abbreviato (D)")  ///
                     ("Dettagliato"    = 3 "Dettagliato"), gen(h36)
