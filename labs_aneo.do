@@ -1,3 +1,5 @@
+** aggiunte voci 1238 e 1204
+
 
 /*** controlla l'installazione di strrec, se non c'è, procede all'installazione
      commentare questa procedura se il pc non è connesso ad internet
@@ -1443,6 +1445,11 @@ if !_rc {
  label var vc_1044 "Acconti"
  }
 
+ capture confirm variable vc_1204
+ if !_rc {
+  label var vc_1204 "Immobilizzazioni materiali destinate alla vendita"
+  }
+
 capture confirm variable vc_1058
 if !_rc {
  label var vc_1058 "TOTALE CREDITI"
@@ -1588,15 +1595,15 @@ if !_rc {
  label var vc_3055 "Cred. verso altri oltre"
  }
 
-
-
-
-
-
 capture confirm variable vc_1056
 if !_rc {
  label var vc_1056 "Crediti a breve"
  }
+
+ capture confirm variable vc_1238
+ if !_rc {
+  label var vc_1238 "Crediti per imposte anticipate"
+  }
 
 capture confirm variable vc_1057
 if !_rc {
