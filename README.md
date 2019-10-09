@@ -1,1 +1,1 @@
-## Importare dati da Aida a Stata
+## Importare i dati di Aida Bureau Van Djik in Stata
