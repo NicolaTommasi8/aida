@@ -20,8 +20,11 @@ label drop _all
  ****  PROGs DEFINITION   ****
  *****************************/
 
-capture program drop dest_prov
-program define dest_prov
+capture program drop prov_num
+program define prov_num
+  tempvar anno
+  gen `anno' = 2020
+  capture replace `anno'=anno
   replace `1'="84"   if `1'=="Agrigento"
   replace `1'="6"    if `1'=="Alessandria"
   replace `1'="42"   if `1'=="Ancona"
@@ -125,14 +128,15 @@ program define dest_prov
   replace `1'="102"  if `1'=="Vibo Valentia"
   replace `1'="24"   if `1'=="Vicenza"
   replace `1'="56"   if `1'=="Viterbo"
-  replace `1'="15"   if inlist(`1',"Monza Brianza","Monza e della Brianza") & anno<2009
-  replace `1'="108"  if inlist(`1',"Monza Brianza","Monza e della Brianza") & anno>=2009
+  replace `1'="15"   if inlist(`1',"Monza Brianza","Monza e della Brianza") & `anno'<2009
+  replace `1'="108"  if inlist(`1',"Monza Brianza","Monza e della Brianza") & `anno'>=2009
   replace `1'="109"   if `1'=="Fermo"
   replace `1'="110"   if `1'=="Barletta-Andria-Trani"
   replace `1'="106"   if `1'=="Medio Campidano"
   replace `1'="105"   if `1'=="Ogliastra"
   replace `1'="104"   if `1'=="Olbia-Tempio"
   replace `1'="107"   if `1'=="Carbonia-Iglesias"
+  replace `1'="111"   if `1'=="Sud Sardegna"
   replace `1'="" if inlist(`1',"-","Emilia-Romagna","Friuli-Venezia Giulia","Lazio","Lombardia","Umbria")
   destring `1', replace
   confirm numeric variable `1'
@@ -140,8 +144,8 @@ program define dest_prov
 end
 
 
-capture program drop dest_regio
-program define dest_regio
+capture program drop regio_num
+program define regio_num
    replace `1'=lower(`1')
    replace `1'="" if inlist(`1',"-","san marino")
    replace `1'="13" if `1'=="abruzzo"
@@ -531,30 +535,73 @@ end
 capture program drop ORIGINE
 program define ORIGINE
   /***   ????????   ***/
+  replace `1'="" if inlist(`1',"-")
   gen TMP=`1'
   count if `1'==""
   local pre_miss = r(N)
-  strrec `1' ("AR"  = 1  "AR")   ///
-             ("CP"  = 2  "CP")   ///
-             ("DP"  = 3  "DP")   ///
-             ("FS"  = 4  "FS")   ///
-             ("HO"  = 5  "HO")   ///
-             ("IP"  = 6  "IP")   ///
-             ("IW"  = 7  "IW")   ///
-             ("KS"  = 8  "KS")   ///
-             ("NC"  = 9  "NC")   ///
-             ("OS"  = 10 "OS")   ///
-             ("PC"  = 11 "PC")   ///
-             ("PX"  = 12 "PX")   ///
-             ("RM"  = 13 "RM")   ///
-             ("RS"  = 14 "RS")   ///
-             ("SE"  = 15 "SE")   ///
-             ("TC"  = 16 "TC")   ///
-             ("TJ"  = 17 "TJ")   ///
-             ("VD"  = 18 "VD")   ///
-             ("WB"  = 19 "WB")   ///
-             ("WW"  = 20 "WW")   ///
-             , define(`1') replace casesensitive sub
+  strrec `1' ("AR"=1     "AR") ///
+             ("BD"=2     "BD") ///
+             ("BI"=3     "BI") ///
+             ("BV"=4     "BV") ///
+             ("CB"=5     "CB") ///
+             ("CA"=6     "CA") ///
+             ("CI"=7     "CI") ///
+             ("CP"=8     "CP") ///
+             ("CT"=9     "CT") ///
+             ("CU"=10    "CU") ///
+             ("DP"=11    "DP") ///
+             ("EC"=12    "EC") ///
+             ("ED"=13    "ED") ///
+             ("FA"=14    "FA") ///
+             ("FC"=15    "FC") ///
+             ("FI"=16    "FI") ///
+             ("FS"=17    "FS") ///
+             ("GA"=18    "GA") ///
+             ("HO"=19    "HO") ///
+             ("HR"=20    "HR") ///
+             ("HS"=21    "HS") ///
+             ("IA"=22    "IA") ///
+             ("ID"=23    "ID") ///
+             ("IH"=24    "IH") ///
+             ("II"=25    "II") ///
+             ("IN"=26    "IN") ///
+             ("IP"=27    "IP") ///
+             ("IR"=28    "IR") ///
+             ("IS"=29    "IS") ///
+             ("IV"=30    "IV") ///
+             ("IW"=31    "IW") ///
+             ("JO"=32    "JO") ///
+             ("KO"=33    "KO") ///
+             ("LN"=34    "LN") ///
+             ("MI"=35    "MI") ///
+             ("MO"=36    "MO") ///
+             ("NB"=37    "NB") ///
+             ("NC"=38    "NC") ///
+             ("OF"=39    "OF") ///
+             ("OS"=40    "OS") ///
+             ("PC"=41    "PC") ///
+             ("PE"=42    "PE") ///
+             ("PX"=43    "PX") ///
+             ("RM"=44    "RM") ///
+             ("RS"=45    "RS") ///
+             ("SC"=46    "SC") ///
+             ("SE"=47    "SE") ///
+             ("SH"=48    "SH") ///
+             ("ST"=49    "ST") ///
+             ("TC"=50    "TC") ///
+             ("TI"=51    "TI") ///
+             ("TJ"=52    "TJ") ///
+             ("TU"=53    "TU") ///
+             ("UC"=54    "UC") ///
+             ("VC"=55    "VC") ///
+             ("VD"=56    "VD") ///
+             ("WB"=57    "WB") ///
+             ("WO"=58    "WO") ///
+             ("WV"=59    "WV") ///
+             ("WW"=60    "WW") ///
+             ("XB"=61    "XB") ///
+             ("ZP"=62    "ZP") ///
+        , define(`1') replace casesensitive sub
   qui count if `1'==.
   if `pre_miss' == r(N) {
     drop TMP
@@ -577,23 +624,24 @@ program define OW
   gen TMP=`1'
   count if `1'==""
   local pre_miss = r(N)
-  strrec `1' ("AR"  = 1  "AR")                                                                                                                                        ///
-    ("Altri azionisti, in forma aggregata" "Other unnamed shar., agg."                              =  1  "Altri azionisti, in forma aggregata")                      ///
-    ("Assicurazioni" "Insurance company"                                                            =  2  "Assicurazioni")                                            ///
-    ("Aziende industriale" "Industrial company"                                                     =  3  "Aziende industriale")                                      ///
-    ("Banche" "Bank"                                                                                =  4  "Banche")                                                   ///
-    ("Dipendenti /Dirigenti/Amministratori" "Employees/Managers"                                    =  5  "Dipendenti/Dirigenti/Amministratori")                      ///
-    ("Enti Pubblici, Stato, Governo" "State, Public authority" "Public"                             =  6  "Enti pubblici, stato, governo")                            ///
-    ("Fondazioni/Istituti di Ricerca" "Foundation/Research Institute"                               =  7  "Fondazioni/Istituti di ricerca")                           ///
-    ("Fondi Mutualistici & Pensionistici/Nominali/Fiduciari" "Mutual & Pension fund/Trust/Nominee"  =  8  "Fondi mutualistici & pensionistici/nominali/fiduciari")    ///
-    ("La proprietà stessa" "Self-owned"                                                             =  9  "La proprietà stessa")                                      ///
-    ("Persone fisiche o famiglie" "Individual(s) or family(ies)"                                    =  10 "Persone fisiche o famiglie")                               ///
-    ("Private Equity firms"                                                                         =  11 "Private equity firms")                                     ///
-    ("Società Finanziaria" "Financial company"                                                      =  12 "Società finanziaria")                                      ///
-    ("Società Quotate"                                                                              =  13 "Società quotate")                                          ///
-    ("Venture capital"                                                                              =  14 "Venture capital")                                          ///
-    ("Azionisti privati, in forma aggregata" "Unnamed private shareh., agg."                        =  15 "Azionisti privati, in forma aggregata")                    ///
-    ("NA"                                                                                           =  .a "n.a.")                                                     ///
+  strrec `1' ("Altri azionisti, in forma aggregata" "Other unnamed shar., agg."                              =  1  "Altri azionisti, in forma aggregata")                      ///
+             ("Assicurazioni" "Insurance company"                                                            =  2  "Assicurazioni")                                            ///
+             ("Aziende industriale" "Industrial company"                                                     =  3  "Aziende industriale")                                      ///
+             ("Banche" "Bank"                                                                                =  4  "Banche")                                                   ///
+             ("Dipendenti /Dirigenti/Amministratori" "Employees/Managers"                                    =  5  "Dipendenti/Dirigenti/Amministratori")                      ///
+             ("Enti Pubblici, Stato, Governo" "State, Public authority" "Public"                             =  6  "Enti pubblici, stato, governo")                            ///
+             ("Fondazioni/Istituti di Ricerca" "Foundation/Research Institute"                               =  7  "Fondazioni/Istituti di ricerca")                           ///
+             ("Fondi Mutualistici & Pensionistici/Nominali/Fiduciari" "Mutual & Pension fund/Trust/Nominee"  =  8  "Fondi mutualistici & pensionistici/nominali/fiduciari")    ///
+             ("La proprietà stessa" "Self-owned"                                                             =  9  "La proprietà stessa")                                      ///
+             ("Persone fisiche o famiglie" "Individual(s) or family(ies)"                                    =  10 "Persone fisiche o famiglie")                               ///
+             ("Private Equity firms" "Private equity firm"                                                   =  11 "Private equity firms")                                     ///
+             ("Società Finanziaria" "Financial company"                                                      =  12 "Società finanziaria")                                      ///
+             ("Società Quotate"                                                                              =  13 "Società quotate")                                          ///
+             ("Venture capital"                                                                              =  14 "Venture capital")                                          ///
+             ("Azionisti privati, in forma aggregata" "Unnamed private shareh., agg."                        =  15 "Azionisti privati, in forma aggregata")                    ///
+             ("Società"                                                                                      =  16 "Società")                                                  ///
+             ("Nave marittima"                                                                               =  17 "Nave marittima")                                           ///
+             ("NA"                                                                                           =  .a "n.a.")                                                     ///
         , define(`1') replace casesensitive sub
   qui count if `1'==.
   if `pre_miss' == r(N) {
@@ -607,6 +655,63 @@ program define OW
     error 181
   }
 end
+
+
+
+
+
+capture program drop STATUS
+program define STATUS
+  replace `1'=trim(`1')
+    replace `1'="" if inlist(`1',"-")
+  gen TMP=`1'
+  count if `1'==""
+  local pre_miss = r(N)
+  strrec `1' ("AR" = 1 "AR") ///
+             ("AR+" = 2 "AR+") ///
+        , define(`1') replace casesensitive sub
+  qui count if `1'==.
+  if `pre_miss' == r(N) {
+    drop TMP
+    macro drop pre_miss
+  }
+  else {
+    fre TMP if `1'==.
+    drop TMP
+    macro drop pre_miss
+    error 181
+  }
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -722,7 +827,8 @@ label define cod_prov 001 "Torino"                                              
                       107 "Carbonia-Iglesias"                                                 ///
                       108 "Monza Brianza"                                                     ///
                       109 "Fermo"                                                             ///
-                      110 "Barletta-Andria-Trani"
+                      110 "Barletta-Andria-Trani"                                             ///
+                      111 "Sud Sardegna"
 
 capture label drop cod_reg
 label define cod_reg   1 "Piemonte"                 ///
@@ -785,18 +891,11 @@ if !_rc {
 
 
 capture confirm variable sd_isin
-if !_rc {
-  label var sd_isin "ISIN number"
-  rename sd_isin f3
-}
+if !_rc label var sd_isin "ISIN number"
 
 
 capture confirm variable sd_ticker
-if !_rc {
-  label var sd_ticker "Ticker symbol"
-  rename sd_ticker f89
-}
-
+if !_rc label var sd_ticker "Ticker symbol"
 
 
 capture confirm variable indirizz
@@ -940,7 +1039,8 @@ if !_rc {
 capture confirm variable hqpost
 if !_rc {
   label var hqpost "Codice Postale"
-  replace hqpost = trim(hqpost)
+  capture confirm numeric variable hqpost
+  if _rc replace hqpost = trim(hqpost)
   rename hqpost vc_201104
 }
 
@@ -975,7 +1075,7 @@ if !_rc {
 
 
 
- capture confirm variable legalstatus
+capture confirm variable legalstatus
 if !_rc {
   replace legalstatus=trim(legalstatus)
   count if legalstatus==""
@@ -986,7 +1086,7 @@ if !_rc {
                      ("Ditta in liquidazione" "In liquidazione" = 4 "In liquidazione") ///
                      ("Ditta inattiva" = 5 "Inattiva") ///
                      ("Ditta sospesa" = 6 "Sospesa") ///
-                     ("Attiva (Stato di insolvenza)" = 11 "Attiva in stato di insolvenza")  ///
+                     ("Attiva (Stato di insolvenza)" "Attiva (con procedure di insolvenza)"= 11 "Attiva in stato di insolvenza")  ///
                      ("Attiva (Amministrazione Controllata)" = 12 "Attiva in Amministrazione Controllata") ///
                      ("Cessata (Fusione)" = 21 "Cessata per Fusione")  ///
                      ("Cessata (In liquidazione)" = 22 "Cessata in liquidazione")  ///
@@ -995,8 +1095,6 @@ if !_rc {
                      ("Cessata (Scissione)" = 24 "Cessata per Scissione") ///
                      ("Ditta in fallimento" "In fallimento" = 31 "In fallimento") ///
                      , gen(h27)
-
-
   count if h27==.
   assert r(N) == `pre'
   **fre legalstatus if h27==.
@@ -1011,6 +1109,7 @@ if !_rc {
 capture confirm variable formgiur
 if !_rc {
   replace formgiur = trim(formgiur)
+  fre formgiur
   count if formgiur==""
   local pre = r(N)
   strrec formgiur ("Associazione" = 1 "Associazione")  ///
@@ -1146,6 +1245,7 @@ if !_rc {
                       ("C1" = 11 "Consolidato per società SENZA non consolidato" ) ///
                       ("U2" = 20 "Non consolidato per società CON consolidato")  ///
                       ("U1" = 21 "Non consolidato per società SENZA consolidato") ///
+                      ("LF" = 98 "Società con dati di bilancio limitati")  ///
                       ("NF" = 99 "Nessun dato finanziario"), gen(h21)
   order h21, after(codicons_str)
   assert h21!=. if codicons_str!=""
@@ -1191,7 +1291,8 @@ if !_rc {
 
 capture confirm variable ateco7c
 if !_rc {
-  replace ateco7c = trim(ateco7c)
+  capture confirm numeric variable ateco7c
+  if _rc  replace ateco7c = trim(ateco7c)
   label var ateco7c  "ATECO 2007"
   rename ateco7c vc_200060
 }
@@ -2855,6 +2956,733 @@ if !_rc {
 
 
 
+
+
+** VOCI DI RENDICONTO FINANZIARIO
+**metodo indiretto
+capture confirm variable vc_7002
+if !_rc {
+ label var vc_7002 "Utile (perdita) dell'esercizio"
+}
+
+capture confirm variable vc_7003
+if !_rc {
+ label var vc_7003 "Imposte sul reddito"
+}
+
+capture confirm variable vc_7004
+if !_rc {
+ label var vc_7004 "Interessi passivi/(attivi)"
+}
+
+capture confirm variable vc_7005
+if !_rc {
+ label var vc_7005 "(Dividendi)"
+}
+
+capture confirm variable vc_7006
+if !_rc {
+ label var vc_7006 "(Plusvalenze)/Minusvalenze derivanti dalla cessione di attività"
+}
+
+capture confirm variable vc_7007
+if !_rc {
+ label var vc_7007 "Utile (perdita) dell'esercizio prima d'imposte sul reddito, interessi, dividendi e plus/minusvalenze da cessione"
+}
+
+capture confirm variable vc_7009
+if !_rc {
+ label var vc_7009 "Accantonamenti ai fondi"
+}
+
+capture confirm variable vc_7010
+if !_rc {
+ label var vc_7010 "Ammortamenti delle immobilizzazioni"
+}
+
+capture confirm variable vc_7011
+if !_rc {
+ label var vc_7011 "Svalutazioni per perdite durevoli di valore"
+}
+
+capture confirm variable vc_7012
+if !_rc {
+ label var vc_7012 "Rettifiche di valore di attivita e passivita finanziarie di strumenti finanziari derivati che non comportano movimentazione monetarie"
+}
+
+capture confirm variable vc_7013
+if !_rc {
+ label var vc_7013 "Altre rettifiche in aumento/(in diminuzione) per elementi non monetari"
+}
+
+capture confirm variable vc_7014
+if !_rc {
+ label var vc_7014 "Totale rettifiche per elementi non monetari che non hanno avuto contropartita nel capitale circolante netto"
+}
+
+capture confirm variable vc_7015
+if !_rc {
+ label var vc_7015 "Flusso finanziario prima delle variazioni del capitale circolante netto"
+}
+
+capture confirm variable vc_7017
+if !_rc {
+ label var vc_7017 "Decremento/(Incremento) delle rimanenze"
+}
+
+capture confirm variable vc_7018
+if !_rc {
+ label var vc_7018 "Decremento/(Incremento) dei crediti verso clienti"
+}
+
+capture confirm variable vc_7019
+if !_rc {
+ label var vc_7019 "Incremento/(Decremento) dei debiti verso fornitori"
+}
+
+capture confirm variable vc_7020
+if !_rc {
+ label var vc_7020 "Decremento/(Incremento) dei ratei e risconti attivi"
+}
+
+capture confirm variable vc_7021
+if !_rc {
+ label var vc_7021 "Incremento/(Decremento) dei ratei e risconti passivi"
+}
+
+capture confirm variable vc_7022
+if !_rc {
+ label var vc_7022 "Altri decrementi/(Altri incrementi) del capitale circolante netto"
+}
+
+capture confirm variable vc_7023
+if !_rc {
+ label var vc_7023 "Totale variazioni del capitale circolante netto"
+}
+
+capture confirm variable vc_7024
+if !_rc {
+ label var vc_7024 "Flusso finanziario dopo le variazioni del capitale circolante netto"
+}
+
+capture confirm variable vc_7026
+if !_rc {
+ label var vc_7026 "Interessi incassati/(pagati)"
+}
+
+capture confirm variable vc_7027
+if !_rc {
+ label var vc_7027 "(Imposte sul reddito pagate)"
+}
+
+capture confirm variable vc_7028
+if !_rc {
+ label var vc_7028 "Dividendi incassati"
+}
+
+capture confirm variable vc_17029
+if !_rc {
+ label var vc_17029 "(Utilizzo dei fondi)"
+}
+
+capture confirm variable vc_7030
+if !_rc {
+ label var vc_7030 "Altri incassi/(pagamenti)"
+}
+
+capture confirm variable vc_7031
+if !_rc {
+ label var vc_7031 "Totale altre rettifiche"
+}
+
+capture confirm variable vc_7032
+if !_rc {
+ label var vc_7032 "Flusso finanziario dell'attività operativa (A)"
+}
+
+capture confirm variable vc_7034
+if !_rc {
+ label var vc_7034 "Immobilizzazioni materiali: (Investimenti)"
+}
+
+capture confirm variable vc_7035
+if !_rc {
+ label var vc_7035 "Immobilizzazioni materiali: Disinvestimenti"
+}
+
+capture confirm variable vc_7036
+if !_rc {
+ label var vc_7036 "Immobilizzazioni immateriali: (Investimenti)"
+}
+
+capture confirm variable vc_7037
+if !_rc {
+ label var vc_7037 "Immobilizzazioni immateriali: Disinvestimenti"
+}
+
+capture confirm variable vc_7038
+if !_rc {
+ label var vc_7038 "Immobilizzazioni finanziarie: (Investimenti)"
+}
+
+capture confirm variable vc_7039
+if !_rc {
+ label var vc_7039 "Immobilizzazioni finanziarie: Disinvestimenti"
+}
+
+capture confirm variable vc_7040
+if !_rc {
+ label var vc_7040 "Attività finanziarie non immobilizzate: (Investimenti)"
+}
+
+capture confirm variable vc_7041
+if !_rc {
+ label var vc_7041 "Attività finanziarie non immobilizzate: Disinvestimenti"
+}
+
+capture confirm variable vc_7042
+if !_rc {
+ label var vc_7042 "Acquisizione  di societa controllate al netto delle disponibilita liquide"
+ note vc_7042: BIL. CONS.
+}
+
+capture confirm variable vc_7043
+if !_rc {
+ label var vc_7043 "Cessione  di societa controllate al netto delle disponibilita liquide"
+ note vc_7043: BIL. CONS.
+}
+
+capture confirm variable vc_7044
+if !_rc {
+ label var vc_7044 "Acquisizione  di rami d'azienda al netto delle disponibilita liquide"
+}
+
+capture confirm variable vc_7045
+if !_rc {
+ label var vc_7045 "Cessione di rami d'azienda al netto delle disponibilita liquide"
+}
+
+capture confirm variable vc_7046
+if !_rc {
+ label var vc_7046 "Flusso finanziario dell'attività di investimento"
+}
+
+capture confirm variable vc_7049
+if !_rc {
+ label var vc_7049 "Incremento/(Decremento) debiti a breve verso banche"
+}
+
+capture confirm variable vc_7050
+if !_rc {
+ label var vc_7050 "Accensione finanziamenti"
+}
+
+capture confirm variable vc_7051
+if !_rc {
+ label var vc_7051 "(Rimborso finanziamenti)"
+}
+
+capture confirm variable vc_7053
+if !_rc {
+ label var vc_7053 "Aumento di capitale a pagamento"
+}
+
+capture confirm variable vc_7054
+if !_rc {
+ label var vc_7054 "(Rimborso di capitale)"
+}
+
+capture confirm variable vc_7055
+if !_rc {
+ label var vc_7055 "Cessione/(Acquisto) di azioni proprie"
+}
+
+capture confirm variable vc_7056
+if !_rc {
+ label var vc_7056 "(Dividendi e acconti su dividendi pagati)"
+}
+
+capture confirm variable vc_7057
+if !_rc {
+ label var vc_7057 "Flusso finanziario dell'attivita di finanziamento"
+}
+
+capture confirm variable vc_7058
+if !_rc {
+ label var vc_7058 "Incremento (decremento) delle disponibilita liquide"
+ note vc_7058:  A + B + C
+}
+
+capture confirm variable vc_7059
+if !_rc {
+ label var vc_7059 "Effetto cambi sulle disponibilità liquide"
+}
+
+capture confirm variable vc_7060
+if !_rc {
+ label var vc_7060 "Disponibilità liquide a inizio esercizio"
+}
+
+capture confirm variable vc_7061
+if !_rc {
+ label var vc_7061 "Depositi bancari e postali"
+}
+
+capture confirm variable vc_7062
+if !_rc {
+ label var vc_7062 "Assegni"
+}
+
+capture confirm variable vc_7063
+if !_rc {
+ label var vc_7063 "Danaro e valori in cassa"
+}
+
+capture confirm variable vc_7064
+if !_rc {
+ label var vc_7064 "Totale disponibilita liquide a inizio esercizio"
+}
+
+capture confirm variable vc_7065
+if !_rc {
+ label var vc_7065 "Totale disponibilità liquide a inizio esercizio, di cui non liberamente utilizzabili"
+}
+
+capture confirm variable vc_7067
+if !_rc {
+ label var vc_7067 "Depositi bancari e postali"
+}
+
+capture confirm variable vc_7068
+if !_rc {
+ label var vc_7068 "Assegni"
+}
+
+capture confirm variable vc_7069
+if !_rc {
+ label var vc_7069 "Denaro e valori in cassa"
+}
+
+capture confirm variable vc_7070
+if !_rc {
+ label var vc_7070 "Totale disponibilità liquide a fine esercizio"
+}
+
+capture confirm variable vc_7071
+if !_rc {
+ label var vc_7071 "Totale disponibilità liquide a fine esercizio, di cui non liberamente utilizzabili"
+}
+
+capture confirm variable vc_7072
+if !_rc {
+ label var vc_7072 "Acquisizione o cessione di societa controllate"
+ note vc_7072:  BIL. CONS.
+}
+
+capture confirm variable vc_7073
+if !_rc {
+ label var vc_7073 "Corrispettivi totali pagati o ricevuti"
+ note vc_7073:  BIL. CONS.
+}
+
+capture confirm variable vc_7074
+if !_rc {
+ label var vc_7074 "Parte dei corrispettivi consistente in disponibilità liquide"
+ note vc_7074:  BIL. CONS.
+}
+
+capture confirm variable vc_7075
+if !_rc {
+ label var vc_7075 "Disponibilità liquide acquisite o cedute con le operazioni di acquisizione/cessione delle societa controllate"
+ note vc_7075:  BIL. CONS.
+}
+
+capture confirm variable vc_7076
+if !_rc {
+ label var vc_7076 "Valore contabile delle attività/passivita acquisite o cedute"
+ note vc_7076:  BIL. CONS.
+}
+
+capture confirm variable vc_7078
+if !_rc {
+ label var vc_7078 "Incassi da clienti"
+}
+
+capture confirm variable vc_7079
+if !_rc {
+ label var vc_7079 "Altri incassi"
+}
+
+capture confirm variable vc_7080
+if !_rc {
+ label var vc_7080 "(Pagamenti a fornitori per acquisti)"
+}
+
+capture confirm variable vc_7081
+if !_rc {
+ label var vc_7081 "(Pagamenti a fornitori per servizi)"
+}
+
+capture confirm variable vc_7082
+if !_rc {
+ label var vc_7082 "(Pagamenti al personale)"
+}
+
+capture confirm variable vc_7083
+if !_rc {
+ label var vc_7083 "(Altri pagamenti)"
+}
+
+capture confirm variable vc_7084
+if !_rc {
+ label var vc_7084 "(Imposte pagate sul reddito)"
+}
+
+capture confirm variable vc_7085
+if !_rc {
+ label var vc_7085 "Interessi incassati/(pagati)"
+}
+
+capture confirm variable vc_7086
+if !_rc {
+ label var vc_7086 "Dividendi incassati"
+}
+
+capture confirm variable vc_7087
+if !_rc {
+ label var vc_7087 "Flusso finanziario dell'attivita operativa"
+}
+
+capture confirm variable vc_7089
+if !_rc {
+ label var vc_7089 "Immobilizzazioni materiali: (Investimenti)"
+}
+
+capture confirm variable vc_7090
+if !_rc {
+ label var vc_7090 "Immobilizzazioni materiali: Disinvestimenti"
+}
+
+capture confirm variable vc_7091
+if !_rc {
+ label var vc_7091 "Immobilizzazioni immateriali: (Investimenti)"
+}
+
+capture confirm variable vc_7092
+if !_rc {
+ label var vc_7092 "Immobilizzazioni immateriali: Disinvestimenti"
+}
+
+capture confirm variable vc_7093
+if !_rc {
+ label var vc_7093 "Immobilizzazioni finanziarie: (Investimenti)"
+}
+
+capture confirm variable vc_7094
+if !_rc {
+ label var vc_7094 "Immobilizzazioni finanziarie: Disinvestimenti"
+}
+
+capture confirm variable vc_7095
+if !_rc {
+ label var vc_7095 "Attività finanziarie non immobilizzate: (Investimenti)"
+}
+
+capture confirm variable vc_7096
+if !_rc {
+ label var vc_7096 "Attività finanziarie non immobilizzate: Disinvestimenti"
+}
+
+capture confirm variable vc_7098
+if !_rc {
+ label var vc_7098 "Cessione  di società controllate al netto delle disponibilità liquide"
+  note vc_7098: BIL. CONS.
+}
+
+capture confirm variable vc_7099
+if !_rc {
+ label var vc_7099 "Acquisizione di rami d'azienda al netto delle disponibilità liquide"
+}
+
+capture confirm variable vc_7100
+if !_rc {
+ label var vc_7100 "Cessione di rami d'azienda al netto delle disponibilità liquide"
+}
+
+capture confirm variable vc_7101
+if !_rc {
+ label var vc_7101 "Flusso finanziario dell'attivita di investimento"
+}
+
+capture confirm variable vc_7104
+if !_rc {
+ label var vc_7104 "Incremento/(Decremento) debiti a breve verso banche"
+}
+
+capture confirm variable vc_7105
+if !_rc {
+ label var vc_7105 "Accensione finanziamenti"
+}
+
+capture confirm variable vc_7106
+if !_rc {
+ label var vc_7106 "(Rimborso finanziamenti)"
+}
+
+capture confirm variable vc_7108
+if !_rc {
+ label var vc_7108 "Aumento di capitale a pagamento"
+}
+
+capture confirm variable vc_7109
+if !_rc {
+ label var vc_7109 "(Rimborso di capitale)"
+}
+
+capture confirm variable vc_7110
+if !_rc {
+ label var vc_7110 "Cessione/(Acquisto) di azioni proprie"
+}
+
+capture confirm variable vc_7111
+if !_rc {
+ label var vc_7111 "(Dividendi e acconti su dividendi pagati)"
+}
+
+capture confirm variable vc_7112
+if !_rc {
+ label var vc_7112 "Flusso finanziario dell'attività di finanziamento"
+}
+
+capture confirm variable vc_7113
+if !_rc {
+ label var vc_7113 "Incremento (decremento) delle disponibilità liquide"
+}
+
+capture confirm variable vc_7114
+if !_rc {
+ label var vc_7114 "Effetto netto sulle disponibilità liquide"
+}
+
+capture confirm variable vc_7116
+if !_rc {
+ label var vc_7116 "Depositi bancari e postali"
+}
+
+capture confirm variable vc_7117
+if !_rc {
+ label var vc_7117 "Assegni"
+}
+
+capture confirm variable vc_7118
+if !_rc {
+ label var vc_7118 "Danaro e valori in cassa"
+}
+
+capture confirm variable vc_7119
+if !_rc {
+ label var vc_7119 "Totale disponibilita liquide a inizio esercizio"
+}
+
+capture confirm variable vc_7120
+if !_rc {
+ label var vc_7120 "Totale disponibilità liquide a inizio esercizio: di cui non liberamente utilizzabili"
+}
+
+capture confirm variable vc_7122
+if !_rc {
+ label var vc_7122 "Depositi bancari e postali"
+}
+
+capture confirm variable vc_7123
+if !_rc {
+ label var vc_7123 "Assegni"
+}
+
+capture confirm variable vc_7124
+if !_rc {
+ label var vc_7124 "Danaro e valori in cassa"
+}
+
+capture confirm variable vc_7125
+if !_rc {
+ label var vc_7125 "Totale disponibilita liquide a fine esercizio"
+}
+
+capture confirm variable vc_7126
+if !_rc {
+ label var vc_7126 "Totale disponibilità liquide a fine esercizio: di cui non liberamente utilizzabili"
+}
+
+capture confirm variable vc_7127
+if !_rc {
+ label var vc_7127 "Acquisizione o cessione di societa controllate"
+ note vc_7127:  BIL. CONS.
+}
+
+capture confirm variable vc_7128
+if !_rc {
+ label var vc_7128 "Corrispettivi totali pagati o ricevuti"
+ note vc_7128:  BIL. CONS.
+}
+
+capture confirm variable vc_7129
+if !_rc {
+ label var vc_7129 "Parte dei corrispettivi consistente in disponibilità liquide"
+ note vc_7129:  BIL. CONS.
+}
+
+capture confirm variable vc_7130
+if !_rc {
+ label var vc_7130 "Disponibilità liquide acquisite o cedute con le operazioni di acquisizione/cessione delle società controllate"
+ note vc_7130:  BIL. CONS.
+}
+
+capture confirm variable vc_7131
+if !_rc {
+ label var vc_7131 "Valore contabile delle attivita/passivita acquisite o cedute"
+  note vc_7131:  BIL. CONS.
+}
+
+
+
+
+***PARTECIPAZIONI
+
+capture confirm variable vc_m9439
+if !_rc label var vc_m9439 "Partecipazioni Commenti"
+
+capture confirm variable vc_m9354
+if !_rc label var vc_m9354 "Numero di partecipazioni disponibili"
+
+capture confirm variable vc_m9300
+if !_rc label var vc_m9300 "Partecipate - Nome"
+
+capture confirm variable vc_m9305
+if !_rc label var vc_m9305 "Partecipate - BvD ID number"
+
+capture confirm variable vc_m9387
+if !_rc label var vc_m9387 "Partecipate - Ticker symbol"
+
+capture confirm variable vc_m9302
+if !_rc label var vc_m9302 "Partecipate - Country ISO code"
+
+capture confirm variable vc_m9306
+if !_rc label var vc_m9306 "Partecipazioni Città"
+
+capture confirm variable vc_m9314
+if !_rc {
+  OW vc_m9314
+  label var vc_m9314 "Partecipate - Tipologia"
+}
+
+capture confirm variable vc_m9393
+if !_rc {
+  destring vc_m9393, replace ignore("-")
+  label var vc_m9393 "Partecipazioni Codice NACE"
+}
+
+capture confirm variable vc_m9381
+if !_rc {
+  destring vc_m9381, replace ignore("-")
+  label var vc_m9381 "Partecipazioni Codice NAICS"
+}
+
+capture confirm variable vc_m9374
+if !_rc label var vc_m9374 "Partecipazioni Livello"
+
+capture confirm variable vc_m9308
+if !_rc label var vc_m9308 "Partecipazioni % Diretta"
+
+capture confirm variable vc_m9309
+if !_rc label var vc_m9309 "Partecipazioni % Totale"
+
+capture confirm variable vc_m35120
+if !_rc {
+  tostring vc_m35120, replace
+  label var vc_m35120 "Partecipata - Informazioni su possibili variazioni nella %"
+}
+
+capture confirm variable vc_m9345
+if !_rc {
+  STATUS vc_m9345
+  label var vc_m9345 "Partecipate - Status"
+}
+
+capture confirm variable vc_m9320
+if !_rc {
+  ORIGINE vc_m9320
+  label var vc_m9320 "Partecipazioni Fonte dell'informazione"
+}
+
+capture confirm variable vc_m9332
+if !_rc {
+  replace vc_m9332="" if inlist(vc_m9332,"n.d.","-")
+  tempvar temp
+  gen `temp' = monthly(vc_m9332,"MY")
+  format `temp' %tm
+  assert `temp'!=. if vc_m9332!=""
+  order `temp', after(vc_m9332)
+  drop vc_m9332
+  rename `temp' vc_m9332
+  label var vc_m9332 "Partecipate - Data informazione"
+}
+
+capture confirm variable vc_m9303
+if !_rc {
+ label var vc_m9303 "Partecipazioni Ricavi delle vendite"
+ note vc_m9303: (Fatt.) mil EUR
+}
+
+capture confirm variable vc_m9337
+if !_rc {
+ label var vc_m9337 "Partecipazioni Totale Attività"
+ note vc_m9337: mil EUR
+}
+
+capture confirm variable vc_m9365
+if !_rc label var vc_m9365 "N° di dipendenti"
+
+capture confirm variable vc_m9323
+if !_rc {
+  label var vc_m9323 "Partecipata - Codice fiscale"
+  capture confirm string variable vc_m9323
+  if _rc {
+    format vc_m9323 %011.0f
+    tostring vc_m9323, replace force u
+  }
+}
+
+capture confirm variable vc_m9324
+if !_rc {
+  label var vc_m9324 "Partecipata - Partita IVA"
+  format vc_m9324 %011.0f
+}
+
+capture confirm variable vc_m9325
+if !_rc label var vc_m9325 "Partecipata - Indirizzo"
+
+capture confirm variable vc_m9326
+if !_rc label var vc_m9326 "Partecipata - Codice postale"
+
+capture confirm variable vc_m9327
+if !_rc  label var vc_m9327 "Partecipata - Località"
+
+capture confirm variable vc_m9328
+if !_rc {
+  label var vc_m9328 "Partecipata - Provincia"
+  prov_num vc_m9328
+}
+
+capture confirm variable vc_m9329
+if !_rc {
+  label var vc_m9329 "Partecipata - Regione"
+  regio_num vc_m9329
+}
+
+capture confirm variable vc_m9330
+if !_rc label var vc_m9330 "Partecipata - Numero di telefono"
+
 capture confirm variable exfiling
 if !_rc {
   replace exfiling=trim(exfiling)
@@ -2864,10 +3692,6 @@ if !_rc {
   label var h62 "Esonerati dalla presentazione"
   drop exfiling
 }
-
-
-
-
 
 capture confirm variable proc_cessazione
 if !_rc {
@@ -2879,6 +3703,7 @@ if !_rc {
 
 capture confirm variable proc_cess_open_date
 if !_rc {
+  replace proc_cess_open_date="" if strlen(proc_cess_open_date)<=5
   gen prova = date(proc_cess_open_date,"DMY")
   format prova %td
   assert prova!=. if proc_cess_open_date!=""
@@ -2890,6 +3715,7 @@ if !_rc {
 
 capture confirm variable proc_cess_close_date
 if !_rc {
+  replace proc_cess_close_date="" if strlen(proc_cess_close_date)<=5
   gen prova = date(proc_cess_close_date,"DMY")
   format prova %td
   assert prova!=. if proc_cess_close_date!=""
@@ -2899,34 +3725,20 @@ if !_rc {
   label var vc_200089 "Data di chiusura procedura"
 }
 
-
-
 capture confirm variable vc_203010
-if !_rc {
-  label var vc_203010 "Area commerciale"
-}
-
+if !_rc label var vc_203010 "Area commerciale"
 
 capture confirm variable vc_203100
-if !_rc {
-  label var vc_203100 "Natura giuridica"
-}
+if !_rc label var vc_203100 "Natura giuridica"
 
 capture confirm variable vc_203102
-if !_rc {
-  label var vc_203102 "Camera di Commercio"
-}
-
+if !_rc label var vc_203102 "Camera di Commercio"
 
 capture confirm variable vc_206007
-if !_rc {
-  label var vc_206007 "Attività esercitata"
-}
+if !_rc label var vc_206007 "Attività esercitata"
 
 capture confirm variable vc_207000
-if !_rc {
-  label var vc_207000 "Oggetto sociale"
-}
+if !_rc label var vc_207000 "Oggetto sociale"
 
 capture confirm variable marketcap
 if !_rc {
@@ -2934,11 +3746,6 @@ if !_rc {
   label var marketcap "Capitalizzazione di mercato corrente (migl.)"
   rename marketcap f99
 }
-
-
-
-
-
 
 capture confirm variable datemarkcap
 if !_rc {
@@ -2951,9 +3758,6 @@ if !_rc {
   label var f80 "Data dell'attuale capitalizzazione di mercato"
 }
 
-
-
-
 capture confirm variable attivigb
 if !_rc {
   replace attivigb=trim(attivigb)
@@ -2968,6 +3772,11 @@ if !_rc {
   rename attivigb ac02
 }
 
+capture confirm variable s_innod_overview
+if !_rc label var s_innod_overview "Overview completa"
+
+capture confirm variable s_innod_history
+if !_rc label var s_innod_history "Storico"
 
 capture confirm variable s_innod_primary_business_line
 if !_rc {
@@ -2975,13 +3784,11 @@ if !_rc {
   label var s_innod_primary_business_line "Linea di business principale"
 }
 
-
 capture confirm variable s_innod_secondary_business_line
 if !_rc {
   replace s_innod_secondary_business_line=trim(s_innod_secondary_business_line)
   label var s_innod_secondary_business_line "Linea di business secondaria"
 }
-
 
 capture confirm variable s_innod_main_activity
 if !_rc {
@@ -3001,20 +3808,137 @@ if !_rc {
   label var s_innod_main_products_services "Principali prodotti e servizi"
 }
 
+capture confirm variable s_innod_size_estimate
+if !_rc {
+  label var s_innod_size_estimate "Stima dimensione"
+}
 
+capture confirm variable s_innod_strategy_organization_an
+if !_rc {
+  rename s_innod_strategy_organization_an s_innod_strat_org_pol
+  label var s_innod_strat_org_pol "Strategia, organizzazione e policy"
+}
+
+capture confirm variable s_innod_strategic_alliances
+if !_rc {
+  rename s_innod_strategic_alliances s_innod_strat_all
+  label var s_innod_strat_all "Alleanze strategiche"
+}
+
+capture confirm variable s_innod_membership_of_a_network
+if !_rc {
+  rename s_innod_membership_of_a_network s_innod_memb_network
+  label var s_innod_memb_network "Socio di un network"
+}
+
+capture confirm variable s_innod_main_brand_names
+if !_rc {
+  label var s_innod_main_brand_names "Principali marchi"
+}
+
+capture confirm variable s_innod_country_name
+if !_rc {
+  label var s_innod_country_name "Principale Stato"
+}
+
+capture confirm variable s_innod_main_foreign_countries_o
+if !_rc {
+  rename s_innod_main_foreign_countries_o s_innod_main_foreign_countries
+  label var s_innod_main_foreign_countries "Principali Stati o regioni straniere"
+}
+
+capture confirm variable s_innod_main_production_sites
+if !_rc {
+  rename s_innod_main_production_sites s_innod_main_prod_sites
+  label var s_innod_main_prod_sites "Principali siti di produzione"
+}
+
+capture confirm variable s_innod_main_distribution_sites
+if !_rc {
+  rename s_innod_main_distribution_sites s_innod_main_distrib_sites
+  label var s_innod_main_distrib_sites "Principali siti di distribuzione"
+}
+
+capture confirm variable s_innod_main_sales_representatio
+if !_rc {
+  rename s_innod_main_sales_representatio s_innod_main_sales_rep_site
+  label var s_innod_main_sales_rep_site "Principali siti di rappresentanza"
+}
+
+capture confirm variable s_innod_main_customers
+if !_rc {
+  label var s_innod_main_customers "Clienti principali"
+}
+
+capture confirm variable s_innod_overview_limited_info
+if !_rc {
+  rename s_innod_overview_limited_info s_innod_overview_lim_info
+  label var s_innod_overview_lim_info "Indicatore informazioni concise"
+}
+
+capture confirm variable artisanat_str
+if !_rc {
+  rename artisanat_str artisanat
+  replace artisanat=trim(artisanat)
+  count if artisanat==""
+  local pre = r(N)
+  strrec artisanat ("si" "yes"=1 "sì") ("no"=0 "no"), replace
+  count if artisanat==.
+  assert r(N) == `pre'
+  label var artisanat "Società artigiana"
+}
+
+capture confirm variable isastartup_str
+if !_rc {
+  rename isastartup_str startup_innov
+  replace startup_innov=trim(startup_innov)
+  count if startup_innov==""
+  local pre = r(N)
+  strrec startup_innov ("si" "yes"=1 "sì") ("no"=0 "no"), replace
+  count if startup_innov==.
+  assert r(N) == `pre'
+  label var startup_innov "Start-up innovativa"
+}
+
+capture confirm variable isapmi_str
+if !_rc {
+  rename isapmi_str pmi_innov
+  replace pmi_innov=trim(pmi_innov)
+  count if pmi_innov==""
+  local pre = r(N)
+  strrec pmi_innov ("si" "yes"=1 "sì") ("no"=0 "no"), replace
+  count if pmi_innov==.
+  assert r(N) == `pre'
+  label var pmi_innov "pmi innovativa"
+}
+
+capture confirm variable impexp
+if !_rc {
+  replace impexp=trim(impexp)
+  count if impexp==""
+  local pre = r(N)
+  strrec impexp ("si" "yes"=1 "sì") ("no"=0 "no"), replace
+  count if impexp==.
+  assert r(N) == `pre'
+  label var impexp "Operatore estero"
+}
+
+capture confirm variable corporate_purpose
+if !_rc {
+  label var corporate_purpose "Oggetto sociale"
+}
 
 capture confirm variable cciaapr
 if !_rc {
   label var cciaapr "CCIAA precedente"
 }
 
-
 capture confirm variable cciaapr_date
 if !_rc {
   gen temp = date(cciaapr_date,"DMY")
   format temp %td
   assert temp!=. if cciaapr_date!=""
-  order cciaapr_date, after(cciaapr_date)
+  order temp, after(cciaapr_date)
   drop cciaapr_date
   rename temp cciaapr_date
   label var cciaapr_date "Data modifica CCIAA"
@@ -3084,6 +4008,47 @@ if !_rc {
   label var naicsdes2012 "NAICS 2012 descrizione"
 }
 
+capture confirm variable naics2017_core_code
+if !_rc {
+  label var naics2017_core_code "NAICS 2017, core code"
+}
+
+capture confirm variable naics2017_primary_code
+if !_rc {
+  label var naics2017_primary_code "NAICS 2017, primary code"
+}
+
+capture confirm variable naics2017_secondary_code
+if !_rc {
+  label var naics2017_secondary_code "NAICS 2017, primary code"
+}
+
+capture confirm variable sae_core_code
+if !_rc {
+  label var sae_core_code "SAE codice"
+}
+
+capture confirm variable rae_core_code
+if !_rc {
+  label var rae_core_code "RAE codice"
+}
+
+capture confirm variable opgname
+if !_rc {
+  label var opgname "Nome gruppo dei pari"
+}
+
+capture confirm variable opgdesc
+if !_rc {
+  label var opgdesc "Descrizione gruppo dei pari"
+}
+
+capture confirm variable opgsize
+if !_rc {
+  label var opgsize "Dimensione gruppo dei pari"
+}
+
+
 capture confirm variable ussiccod
 if !_rc {
   label var ussiccod  "US SIC codice"
@@ -3112,11 +4077,33 @@ if !_rc {
   label var cpycontacts_membership_persons "Numero di esponenti/manager/contatti"
 }
 
+capture confirm variable prev_cpyname
+if !_rc {
+  label var prev_cpyname "Ragione sociale precedente"
+}
+
+capture confirm variable prev_cpyname_date
+if !_rc {
+  gen temp = date(prev_cpyname_date,"DMY")
+  format temp %td
+  assert temp!=. if prev_cpyname_date!=""
+  order temp, after(prev_cpyname_date)
+  drop prev_cpyname_date
+  rename temp prev_cpyname_date
+  label var prev_cpyname_date "Data cambiamento ragione sociale"
+}
+
+
+capture confirm variable insegna
+if !_rc {
+  label var insegna "Insegna"
+}
+
+
 exit
 
 
-prev_cpyname                                                                            Ragione sociale precedente
-prev_cpyname_date                                                                       Dato di cambiamento della ragione sociale
+
 
 refaccou                                                                                Bilanci ridepositato
 
